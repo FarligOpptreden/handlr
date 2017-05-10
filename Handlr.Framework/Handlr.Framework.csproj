@@ -165,11 +165,7 @@
     <None Include="Handlr.Framework.nuspec">
       <SubType>Designer</SubType>
     </None>
-    <None Include="NuGet Commands.txt" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="NuGet-Release.bat" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
