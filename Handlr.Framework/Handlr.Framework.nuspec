@@ -9,7 +9,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A comprehensive toolset for web developers.</description>
     <releaseNotes></releaseNotes>
-    <copyright>Copyright 2016 {type}DEV</copyright>
+    <copyright>Copyright 2017 {type}DEV</copyright>
     <tags></tags>
     <dependencies>
       <dependency id="Microsoft.AspNet.Mvc" version="5.2.3" />

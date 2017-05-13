@@ -112,6 +112,7 @@
     <Compile Include="UI\Types\InfoResponse.cs" />
     <Compile Include="UI\Types\MenuItem.cs" />
     <Compile Include="UI\Types\SecureResponse.cs" />
+    <Compile Include="UI\Views.cs" />
     <Compile Include="Web\Attributes\AcceptUrls.cs" />
     <Compile Include="Web\Attributes\AcceptVerbs.cs" />
     <Compile Include="Web\Attributes\Display.cs" />

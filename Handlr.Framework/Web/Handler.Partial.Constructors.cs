@@ -40,7 +40,9 @@ namespace Handlr.Framework.Web
             PathVariables = new Dictionary<string, string>();
             ErrorLogPath = configuration.Logging.Error;
             SecuriUrl = configuration.Accounts != null ? configuration.Accounts.Url : null;
+            PreConfig?.Invoke(configuration);
             Configuration = configuration;
+            PostConfig?.Invoke(configuration);
             ViewModel = new ViewModel.Container(configuration, Request.ApplicationPath, context, this);
             Initialized = true;
             Guid appId = Guid.Empty;
