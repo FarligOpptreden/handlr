@@ -124,7 +124,7 @@ namespace Handlr.Framework.UI
                 items.Append("</items>");
 
             return new HtmlString(string.Format(
-                "<h-field type=\"list\" id=\"{0}\" label=\"{1}\" value=\"{2}\" placeholder=\"{11}\" {3} {4} class=\"{5}\" onchange=\"{6}\" onblur=\"{7}\" onfocus=\"{8}\" onrender=\"{9}\">{10}</h-field>",
+                "<h-field type=\"list\" id=\"{0}\" label=\"{1}\" value=\"{2}\" placeholder=\"{12}\" {3} {4} class=\"{5}\" onchange=\"{6}\" onblur=\"{7}\" onfocus=\"{8}\" onrender=\"{9}\">{10}{11}</h-field>",
                 args.Id,
                 args.Label,
                 args.Value,
