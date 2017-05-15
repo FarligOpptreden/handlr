@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Web;
 
@@ -17,7 +18,7 @@ namespace Handlr.Framework.UI
         public static IHtmlString Text(TextArguments args)
         {
             return new HtmlString(string.Format(
-                "<h-field type=\"text\" id=\"{0}\" label=\"{1}\" value=\"{2}\" placeholder=\"{3}\" {4} {5} {6} class=\"{7}\" maxlength=\"{8}\" onchange=\"{9}\" onblur=\"{10}\" onfocus=\"{11}\" onrender=\"{12}\" />",
+                "<h-field type=\"text\" id=\"{0}\" label=\"{1}\" value=\"{2}\" placeholder=\"{3}\" {4} {5} {6} class=\"{7}\" maxlength=\"{8}\" onchange=\"{9}\" onblur=\"{10}\" onfocus=\"{11}\" onrender=\"{12}\">{13}</h-field>",
                 args.Id,
                 args.Label,
                 args.Value,
@@ -30,7 +31,8 @@ namespace Handlr.Framework.UI
                 args.Events != null ? args.Events.OnChange : null,
                 args.Events != null ? args.Events.OnBlur : null,
                 args.Events != null ? args.Events.OnFocus : null,
-                args.Events != null ? args.Events.OnRender : null
+                args.Events != null ? args.Events.OnRender : null,
+                RenderValidation(args.Validations)
                 ));
         }
 
@@ -42,7 +44,7 @@ namespace Handlr.Framework.UI
         public static IHtmlString Number(NumberArguments args)
         {
             return new HtmlString(string.Format(
-                "<h-field type=\"number\" id=\"{0}\" label=\"{1}\" value=\"{2}\" placeholder=\"{3}\" {4} {5} class=\"{6}\" onchange=\"{7}\" onblur=\"{8}\" onfocus=\"{9}\" onrender=\"{10}\" />",
+                "<h-field type=\"number\" id=\"{0}\" label=\"{1}\" value=\"{2}\" placeholder=\"{3}\" {4} {5} class=\"{6}\" onchange=\"{7}\" onblur=\"{8}\" onfocus=\"{9}\" onrender=\"{10}\">{11}</h-field>",
                 args.Id,
                 args.Label,
                 args.Value,
@@ -53,7 +55,8 @@ namespace Handlr.Framework.UI
                 args.Events != null ? args.Events.OnChange : null,
                 args.Events != null ? args.Events.OnBlur : null,
                 args.Events != null ? args.Events.OnFocus : null,
-                args.Events != null ? args.Events.OnRender : null
+                args.Events != null ? args.Events.OnRender : null,
+                RenderValidation(args.Validations)
                 ));
         }
 
@@ -65,7 +68,7 @@ namespace Handlr.Framework.UI
         public static IHtmlString Checkbox(CheckboxArguments args)
         {
             return new HtmlString(string.Format(
-                "<h-field type=\"checkbox\" id=\"{0}\" label=\"{1}\" value=\"{2}\" {3} {4} class=\"{5}\" onchange=\"{6}\" onblur=\"{7}\" onfocus=\"{8}\" onrender=\"{9}\" />",
+                "<h-field type=\"checkbox\" id=\"{0}\" label=\"{1}\" value=\"{2}\" {3} {4} class=\"{5}\" onchange=\"{6}\" onblur=\"{7}\" onfocus=\"{8}\" onrender=\"{9}\">{10}</h-field>",
                 args.Id,
                 args.Label,
                 args.Value,
@@ -75,7 +78,8 @@ namespace Handlr.Framework.UI
                 args.Events != null ? args.Events.OnChange : null,
                 args.Events != null ? args.Events.OnBlur : null,
                 args.Events != null ? args.Events.OnFocus : null,
-                args.Events != null ? args.Events.OnRender : null
+                args.Events != null ? args.Events.OnRender : null,
+                RenderValidation(args.Validations)
                 ));
         }
 
@@ -87,7 +91,7 @@ namespace Handlr.Framework.UI
         public static IHtmlString Calendar(CalendarArguments args)
         {
             return new HtmlString(string.Format(
-                "<h-field type=\"calendar\" id=\"{0}\" label=\"{1}\" value=\"{2}\" {3} {4} {5} format=\"{6}\" class=\"{7}\" onchange=\"{8}\" onblur=\"{9}\" onfocus=\"{10}\" onrender=\"{11}\" />",
+                "<h-field type=\"calendar\" id=\"{0}\" label=\"{1}\" value=\"{2}\" {3} {4} {5} format=\"{6}\" class=\"{7}\" onchange=\"{8}\" onblur=\"{9}\" onfocus=\"{10}\" onrender=\"{11}\">{12}</h-field>",
                 args.Id,
                 args.Label,
                 args.Value,
@@ -99,7 +103,8 @@ namespace Handlr.Framework.UI
                 args.Events != null ? args.Events.OnChange : null,
                 args.Events != null ? args.Events.OnBlur : null,
                 args.Events != null ? args.Events.OnFocus : null,
-                args.Events != null ? args.Events.OnRender : null
+                args.Events != null ? args.Events.OnRender : null,
+                RenderValidation(args.Validations)
                 ));
         }
 
@@ -130,7 +135,8 @@ namespace Handlr.Framework.UI
                 args.Events != null ? args.Events.OnBlur : null,
                 args.Events != null ? args.Events.OnFocus : null,
                 args.Events != null ? args.Events.OnRender : null,
-                items.ToString()
+                items.ToString(),
+                RenderValidation(args.Validations)
                 ));
         }
 
@@ -157,8 +163,12 @@ namespace Handlr.Framework.UI
                     args.DataBinding.FieldAccessor
                     );
 
+            string template = "";
+            if (args.Template != null)
+                template = string.Format("<template class=\"{0}\">{1}</template>", args.Template.Classes, args.Template.Content);
+
             return new HtmlString(string.Format(
-                "<h-field type=\"list\" id=\"{0}\" label=\"{1}\" value=\"{2}\" {3} {4} class=\"{5}\" onchange=\"{6}\" onblur=\"{7}\" onfocus=\"{8}\" onrender=\"{9}\">{10}{11}</h-field>",
+                "<h-field type=\"list\" id=\"{0}\" label=\"{1}\" value=\"{2}\" {3} {4} class=\"{5}\" onchange=\"{6}\" onblur=\"{7}\" onfocus=\"{8}\" onrender=\"{9}\">{10}{11}{12}{13}</h-field>",
                 args.Id,
                 args.Label,
                 args.Value,
@@ -170,8 +180,22 @@ namespace Handlr.Framework.UI
                 args.Events != null ? args.Events.OnFocus : null,
                 args.Events != null ? args.Events.OnRender : null,
                 valueBinding,
-                dataBinding
+                dataBinding,
+                template,
+                RenderValidation(args.Validations)
                 ));
+        }
+
+        private static string RenderValidation(List<Validation> validations)
+        {
+            string validation = "";
+            if (validations == null || validations.Count == 0)
+                return validation;
+            foreach (Validation val in validations)
+            {
+                validation += string.Format("<validation onvalidate=\"{0}\" message=\"{1}\"/>", val.OnValidate, val.Message);
+            }
+            return validation;
         }
     }
 }

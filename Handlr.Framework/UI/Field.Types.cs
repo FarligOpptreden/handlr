@@ -85,6 +85,38 @@ namespace Handlr.Framework.UI
         }
 
         /// <summary>
+        /// Represents the HTML content of the template container.
+        /// </summary>
+        public class Template
+        {
+            /// <summary>
+            /// Gets or sets the tempalte css class.
+            /// </summary>
+            public string Classes { get; set; }
+
+            /// <summary>
+            /// Gets or sets the template content.
+            /// </summary>
+            public string Content { get; set; }
+        }
+
+        /// <summary>
+        /// Represents the validation for the field.
+        /// </summary>
+        public class Validation
+        {
+            /// <summary>
+            /// Gets or sets the clientside method to invoke.
+            /// </summary>
+            public string OnValidate { get; set; }
+
+            /// <summary>
+            /// Gets or sets the validation message to display.
+            /// </summary>
+            public string Message { get; set; }
+        }
+
+        /// <summary>
         /// Represents the events shared across all fields.
         /// </summary>
         public class Events

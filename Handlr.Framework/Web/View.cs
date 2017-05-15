@@ -6,32 +6,32 @@ namespace Handlr.Framework.Web
     {
         public Handler ControllerContext
         {
-            get => Model.ControllerContext;
+            get { return Model.ControllerContext; }
         }
 
         public Application Application
         {
-            get => Model.Application;
+            get { return Model.Application; }
         }
 
         public Config Configuration
         {
-            get => Model.Configuration;
+            get { return Model.Configuration; }
         }
 
         public Validation Validation
         {
-            get => Model.Validation;
+            get { return Model.Validation; }
         }
 
         public View ViewDetails
         {
-            get => Model.View;
+            get { return Model.View; }
         }
 
         public T ViewModel
         {
-            get => Model.GetModel<T>();
+            get { return Model.GetModel<T>(); }
         }
 
         public P GetProperty<P>(string key)

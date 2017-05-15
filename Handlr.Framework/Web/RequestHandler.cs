@@ -28,6 +28,7 @@ namespace Handlr.Framework.Web
             if (!File.Exists(context.Server.MapPath(context.Request.Url.AbsolutePath)))
             {
                 // Load the config before handling the request
+                // The config file should be located in the root of the web application and be called "handlr.config. This file need to validate against a predefined XSD document."
                 string configPath = context.Server.MapPath(context.Request.ApplicationPath + "/handlr.config");
                 if (!File.Exists(configPath))
                 {

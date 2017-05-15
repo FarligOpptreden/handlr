@@ -46,6 +46,11 @@ namespace Handlr.Framework.UI
             /// Gets or sets all the events of the field.
             /// </summary>
             public Events Events { get; set; }
+
+            /// <summary>
+            /// Gets or sets all the validation events of the field.
+            /// </summary>
+            public List<Validation> Validations { get; set; }
         }
 
         /// <summary>
@@ -120,7 +125,7 @@ namespace Handlr.Framework.UI
             /// <summary>
             /// Gets or sets the HTML template to use for each item.
             /// </summary>
-            public string Template { get; set; }
+            public Template Template { get; set; }
 
             /// <summary>
             /// Gets or sets the value binding.
