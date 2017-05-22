@@ -2,48 +2,40 @@
 using System.Collections.Generic;
 using System.Linq;
 using Handlr.Framework.Routing.Interfaces;
-using Handlr.Framework;
-using System.Web;
 
 namespace Handlr.Framework.Routing.Types
 {
     /// <summary>
-    /// Represents a cache of POST fields that is used throughout a process.
+    /// Represents a cache of fields that is used throughout a process.
     /// </summary>
-    public class PostFieldCache : Dictionary<string, string>, IFieldCache, IOutput, IInput
+    public class GenericFieldCache : Dictionary<string, object>, IFieldCache, IOutput, IInput
     {
         /// <summary>
-        /// Creates a new PostFieldCache instance.
+        /// Creates a new GenericFieldCache instance.
         /// </summary>
-        public PostFieldCache() { }
+        public GenericFieldCache() { }
 
         /// <summary>
-        /// Creates a new PostFieldCache instance.
+        /// Creates a new GenericFieldCache instance.
         /// </summary>
-        /// <param name="body">The body representing the post</param>
-        public PostFieldCache(string body)
+        /// <param name="queryParams">The query parameters derived from the HTTP request</param>
+        /// <param name="formVariables">The form variables derived from the HTTP request</param>
+        /// <param name="pathVariables">The path variables derived from the HTTP request</param>
+        public GenericFieldCache(Dictionary<string, object> queryParams, Dictionary<string, object> formVariables, Dictionary<string, object> pathVariables)
         {
-            if (string.IsNullOrEmpty(body))
-                throw new ArgumentNullException("body");
+            this
+                .AddRange(queryParams)
+                .AddRange(formVariables)
+                .AddRange(pathVariables);
+        }
 
-            try
-            {
-                Dictionary<string, string> values =
-                    (
-                        from kvp in body.Split('&')
-                        let split = kvp.Split('=')
-                        select new
-                        {
-                            Key = split[0],
-                            Value = split[1]
-                        }
-                    ).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-                this.AddRange(values);
-            }
-            catch
-            {
-                throw new ArgumentException("The supplied string is not a valid post body");
-            }
+        /// <summary>
+        /// Creates a new GenericFieldCache from the specified dictionary.
+        /// </summary>
+        /// <param name="fieldCache">The dictionary to add to the new field cache</param>
+        public GenericFieldCache(Dictionary<string, object> fieldCache)
+        {
+            this.AddRange(fieldCache);
         }
 
         /// <summary>
@@ -52,7 +44,7 @@ namespace Handlr.Framework.Routing.Types
         /// <param name="name">The name of the field to get or set</param>
         /// <returns>The value of the specified field</returns>
         /// <exception cref="ArgumentNullException">Thrown when the name indexer is null</exception>
-        public new string this[string name]
+        public new object this[string name]
         {
             get
             {
@@ -99,16 +91,7 @@ namespace Handlr.Framework.Routing.Types
         /// <returns></returns>
         public T GetValue<T>(string name)
         {
-            return (T)Convert.ChangeType(this[name], typeof(T));
-        }
-
-        public override string ToString()
-        {
-            return
-                (
-                    from kvp in this
-                    select HttpUtility.UrlEncode(kvp.Key) + "=" + HttpUtility.UrlEncode(kvp.Value)
-                ).Flatten("&");
+            return (T)this[name];
         }
     }
 }

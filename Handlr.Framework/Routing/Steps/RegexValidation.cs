@@ -6,6 +6,7 @@ using Handlr.Framework.Routing.Attributes;
 using Handlr.Framework.Routing.Exceptions;
 using Handlr.Framework.Routing.Loaders;
 using Handlr.Framework.Routing.Types;
+using Handlr.Framework.Routing.Interfaces;
 
 namespace Handlr.Framework.Routing.Steps
 {
@@ -13,7 +14,7 @@ namespace Handlr.Framework.Routing.Steps
     /// Represents a step that validates specific fields in the field cache against regex patterns.
     /// </summary>
     [Tag("Validate")]
-    public class RegexValidation : Base<RegexValidationLoaderArguments, RestFieldCache>
+    public class RegexValidation : Base<RegexValidationLoaderArguments>
     {
         private List<RegexValidationException> Exceptions = new List<RegexValidationException>();
 
@@ -30,7 +31,7 @@ namespace Handlr.Framework.Routing.Steps
         /// <param name="fieldCache">The field cache to use for pattern matching</param>
         /// <returns>The unmodified field cache</returns>
         /// <exception cref="RegexValidationException">Thrown when a regex pattern match fails</exception>
-        public override RestFieldCache ExecuteStep(RestFieldCache fieldCache)
+        public override IFieldCache ExecuteStep(IFieldCache fieldCache)
         {
             if (fieldCache == null)
                 throw new ArgumentNullException("fieldCache");

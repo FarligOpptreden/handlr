@@ -11,12 +11,10 @@ namespace Handlr.Framework.Routing.Steps
     /// Provides a base for building IStep implementations. This class cannot be instantiated.
     /// </summary>
     /// <typeparam name="L">The type of loader arguments to use</typeparam>
-    /// <typeparam name="C">The type of field cache to use</typeparam>
-    public abstract class Base<L, C> : IStep
+    public abstract class Base<L> : IStep
         where L : ILoaderArguments
-        where C : IFieldCache
     {
-        private C FieldCache { get; set; }
+        private IFieldCache FieldCache { get; set; }
 
         /// <summary>
         /// Gets the current execution context of the step.
@@ -42,7 +40,7 @@ namespace Handlr.Framework.Routing.Steps
         /// </summary>
         /// <param name="fieldCache">The field cache to use as input data</param>
         /// <returns>The updated field cache</returns>
-        public abstract C ExecuteStep(C fieldCache);
+        public abstract IFieldCache ExecuteStep(IFieldCache fieldCache);
 
         /// <summary>
         /// Executes the step using the supplied field cache as input data.
@@ -56,8 +54,8 @@ namespace Handlr.Framework.Routing.Steps
             if (fieldCache == null)
                 throw new ArgumentNullException("fieldCache");
 
-            FieldCache = (C)(IFieldCache)fieldCache;
-            return (T)(IFieldCache)ExecuteStep((C)(IFieldCache)fieldCache);
+            FieldCache = fieldCache;
+            return (T)ExecuteStep(fieldCache);
         }
 
         /// <summary>

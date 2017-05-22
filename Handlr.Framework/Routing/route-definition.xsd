@@ -1,0 +1,268 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <!-- ///// Group: Steps ///// -->
+  <xs:group name="steps">
+    <xs:choice>
+      <!-- ///// Element: Validate ///// -->
+      <xs:element name="Validate">
+        <xs:complexType>
+          <xs:choice minOccurs="1" maxOccurs="unbounded">
+            <!-- ///// Element: Field ///// -->
+            <xs:element name="Field">
+              <xs:complexType>
+                <xs:attribute name="name" type="xs:string" use="required" />
+                <xs:attribute name="regex" type="xs:string" use="required" />
+                <xs:attribute name="message" type="xs:string" use="required" />
+              </xs:complexType>
+            </xs:element>
+          </xs:choice>
+          <!-- ///// Attributes: Validate ///// -->
+          <xs:attribute name="type" use="required">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="Websure.Routing.Steps.RegexValidation" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
+      <!-- ///// Element: HttpCall ///// -->
+      <xs:element name="HttpCall">
+        <xs:complexType>
+          <xs:sequence>
+            <!-- ///// Element: InputTranslation ///// -->
+            <xs:element name="InputTranslation" minOccurs="0" maxOccurs="1">
+              <xs:complexType>
+                <xs:attribute name="type" use="required">
+                  <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                      <xs:enumeration value="Handlr.Framework.Routing.Translators.JsonWriter" />
+                      <xs:enumeration value="Handlr.Framework.Routing.Translators.PostWriter" />
+                      <xs:enumeration value="Handlr.Framework.Routing.Translators.TextWriter" />
+                      <xs:enumeration value="Handlr.Framework.Routing.Translators.XmlWriter" />
+                    </xs:restriction>
+                  </xs:simpleType>
+                </xs:attribute>
+                <!-- ///// Attributes: InputTranslation ///// -->
+                <xs:attribute name="path" type="xs:string" use="required" />
+              </xs:complexType>
+            </xs:element>
+            <!-- ///// Element: Url ///// -->
+            <xs:element name="Url" minOccurs="1" maxOccurs="1" type="xs:string" />
+            <!-- ///// Element: Method ///// -->
+            <xs:element name="Method" minOccurs="1" maxOccurs="1">
+              <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:enumeration value="Get" />
+                  <xs:enumeration value="Post" />
+                  <xs:enumeration value="Put" />
+                  <xs:enumeration value="Delete" />
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:element>
+            <!-- ///// Element: ContentType ///// -->
+            <xs:element name="ContentType" minOccurs="1" maxOccurs="1">
+              <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:enumeration value="application/json" />
+                  <xs:enumeration value="application/soap+xml" />
+                  <xs:enumeration value="application/x-www-form-urlencoded" />
+                  <xs:enumeration value="multipart/form-data" />
+                  <xs:enumeration value="text/xml" />
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:element>
+            <!-- ///// Element: Headers ///// -->
+            <xs:element name="Headers" minOccurs="0" maxOccurs="1">
+              <xs:complexType>
+                <xs:choice>
+                  <!-- ///// Element: Header ///// -->
+                  <xs:element name="Header" minOccurs="1" maxOccurs="unbounded">
+                    <xs:complexType>
+                      <xs:attribute name="name" type="xs:string" use="required" />
+                      <xs:attribute name="value" type="xs:string" use="required" />
+                    </xs:complexType>
+                  </xs:element>
+                </xs:choice>
+              </xs:complexType>
+            </xs:element>
+            <!-- ///// Element: OutputTranslation ///// -->
+            <xs:element name="OutputTranslation" minOccurs="0" maxOccurs="1">
+              <xs:complexType>
+                <!-- ///// Attributes: OutputTranslation ///// -->
+                <xs:attribute name="type" use="required">
+                  <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                      <xs:enumeration value="Websure.Routing.Translators.JsonReader" />
+                      <xs:enumeration value="Websure.Routing.Translators.TextReader" />
+                      <xs:enumeration value="Websure.Routing.Translators.XmlReader" />
+                    </xs:restriction>
+                  </xs:simpleType>
+                </xs:attribute>
+                <xs:attribute name="path" type="xs:string" use="required" />
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+          <!-- ///// Attributes: HttpCall ///// -->
+          <xs:attribute name="type" use="required">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="Handlr.Framework.Routing.Steps.HttpCall" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
+      <!-- ///// Element: DatabaseCall ///// -->
+      <xs:element name="DatabaseCall">
+        <xs:complexType>
+          <xs:sequence>
+            <!-- ///// Element: ConnectionString ///// -->
+            <xs:element name="ConnectionString" minOccurs="1" maxOccurs="1" type="xs:string" />
+            <!-- ///// Element: Query ///// -->
+            <xs:element name="Query" minOccurs="1" maxOccurs="1" type="xs:string" />
+            <!-- ///// Element: Parameters ///// -->
+            <xs:element name="Parameters" minOccurs="0" maxOccurs="1">
+              <xs:complexType>
+                <xs:choice>
+                  <!-- ///// Element: Parameter ///// -->
+                  <xs:element name="Parameter" minOccurs="1" maxOccurs="unbounded">
+                    <xs:complexType>
+                      <xs:attribute name="name" type="xs:string" use="required" />
+                      <xs:attribute name="value" type="xs:string" use="required" />
+                      <xs:attribute name="type" use="required">
+                        <xs:simpleType>
+                          <xs:restriction base="xs:string">
+                            <xs:enumeration value="bit" />
+                            <xs:enumeration value="datetime" />
+                            <xs:enumeration value="float" />
+                            <xs:enumeration value="int" />
+                            <xs:enumeration value="string" />
+                          </xs:restriction>
+                        </xs:simpleType>
+                      </xs:attribute>
+                      <xs:attribute name="nullable" use="required">
+                        <xs:simpleType>
+                          <xs:restriction base="xs:string">
+                            <xs:enumeration value="false" />
+                            <xs:enumeration value="true" />
+                          </xs:restriction>
+                        </xs:simpleType>
+                      </xs:attribute>
+                    </xs:complexType>
+                  </xs:element>
+                </xs:choice>
+              </xs:complexType>
+            </xs:element>
+            <!-- ///// Element: OutputTranslation ///// -->
+            <xs:element name="OutputTranslation" minOccurs="0" maxOccurs="1">
+              <xs:complexType>
+                <!-- ///// Attributes: OutputTranslation ///// -->
+                <xs:attribute name="type" use="required">
+                  <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                      <xs:enumeration value="Websure.Routing.Translators.DataTableReader" />
+                    </xs:restriction>
+                  </xs:simpleType>
+                </xs:attribute>
+                <xs:attribute name="path" type="xs:string" use="required" />
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+          <!-- ///// Attributes: DatabaseCall ///// -->
+          <xs:attribute name="type" use="required">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="Handlr.Framework.Routing.Steps.AdoCall" />
+                <xs:enumeration value="Handlr.Framework.Routing.Steps.OdbcCall" />
+                <xs:enumeration value="Handlr.Framework.Routing.Steps.OleDbCall" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
+      <!-- ///// Element: Condition ///// -->
+      <xs:element name="Condition">
+        <xs:complexType>
+          <!-- ///// Group Reference: Steps ///// -->
+          <xs:group ref="steps" minOccurs="1" maxOccurs="unbounded" />
+          <!-- ///// Attributes: Condition ///// -->
+          <xs:attribute name="test" type="xs:string" use="required" />
+        </xs:complexType>
+      </xs:element>
+    </xs:choice>
+  </xs:group>
+  <!-- ///// Element: Definition ///// -->
+  <xs:element name="Definition">
+    <xs:complexType>
+      <xs:sequence minOccurs="1">
+        <!-- ///// Element: InputTranslation ///// -->
+        <xs:element name="InputTranslation" minOccurs="0" maxOccurs="1">
+          <xs:complexType>
+            <!-- ///// Attributes: InputTranslation ///// -->
+            <xs:attribute name="type" use="required">
+              <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:enumeration value="Handlr.Framework.Routing.Translators.JsonReader" />
+                  <xs:enumeration value="Handlr.Framework.Routing.Translators.TextReader" />
+                  <xs:enumeration value="Handlr.Framework.Routing.Translators.XmlReader" />
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="path" type="xs:string" use="required" />
+          </xs:complexType>
+        </xs:element>
+        <!-- ///// Group Reference: Steps ///// -->
+        <xs:group ref="steps" minOccurs="0" maxOccurs="unbounded" />
+        <xs:choice minOccurs="1" maxOccurs="2">
+          <!-- ///// Element: OutputTranslation ///// -->
+          <xs:element name="OutputTranslation" minOccurs="0" maxOccurs="1">
+            <xs:complexType>
+              <!-- ///// Attributes: OutputTranslation ///// -->
+              <xs:attribute name="type" use="required">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:enumeration value="Handlr.Framework.Routing.Translators.JsonWriter" />
+                    <xs:enumeration value="Handlr.Framework.Routing.Translators.TextWriter" />
+                    <xs:enumeration value="Handlr.Framework.Routing.Translators.XmlWriter" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:attribute>
+              <xs:attribute name="path" type="xs:string" use="required" />
+            </xs:complexType>
+          </xs:element>
+          <!-- ///// Element: RenderView ///// -->
+          <xs:element name="RenderView" minOccurs="0" maxOccurs="1">
+            <xs:complexType>
+              <!-- ///// Attributes: RenderView ///// -->
+              <xs:attribute name="view" type="xs:string" use="required" />
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+      </xs:sequence>
+      <!-- ///// Attributes: Definition ///// -->
+      <xs:attribute name="url" type="xs:string" use="required" />
+      <xs:attribute name="method" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="Get" />
+            <xs:enumeration value="Post" />
+            <xs:enumeration value="Put" />
+            <xs:enumeration value="Delete" />
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="produces" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="application/json" />
+            <xs:enumeration value="application/soap+xml" />
+            <xs:enumeration value="text/html" />
+            <xs:enumeration value="text/plain" />
+            <xs:enumeration value="text/xml" />
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

@@ -1,21 +1,20 @@
-﻿using Handlr.Framework.Routing.Interfaces;
-using Handlr.Framework.Routing.Types;
+﻿using Handlr.Framework.Routing.Types;
 
 namespace Handlr.Framework.Routing.Translators
 {
     /// <summary>
-    /// Translates the specified generic field cache to a new generic field cache.
+    /// Translates the specified data table input to a standard generic field cache.
     /// </summary>
-    public class JsonWriter : JsonParser
+    public class DataTableReader : JsonParser<DataTableCache, GenericFieldCache>
     {
         private GenericFieldCache cache;
 
         /// <summary>
-        /// Translates the supplied generic field cache to a new generic field cache.
+        /// Translates the supplied data table input to a generic field cache.
         /// </summary>
-        /// <param name="input">The generic field cache to translate</param>
+        /// <param name="input">The data table input to translate</param>
         /// <returns>A REST field cache containing all keys produced by the translation</returns>
-        public override IFieldCache Translate(IFieldCache input)
+        public override GenericFieldCache Translate(DataTableCache input)
         {
             cache = new GenericFieldCache();
             cache.AddRange(LoadAndParseTemplate(input));

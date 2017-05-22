@@ -9,9 +9,9 @@ using System.Xml.XPath;
 namespace Handlr.Framework.Routing.Loaders
 {
     /// <summary>
-    /// Represents loader arguments for initializing an ADO route.
+    /// Represents loader arguments for initializing a database call.
     /// </summary>
-    public class AdoRouteLoaderArguments : Base
+    public class DatabaseCallLoaderArguments : Base
     {
         /// <summary>
         /// Gets the connection string for the data source.
@@ -26,12 +26,12 @@ namespace Handlr.Framework.Routing.Loaders
         /// <summary>
         /// Gets the parameters to apply to the query.
         /// </summary>
-        public List<AdoParameter> Parameters { get; private set; } = new List<AdoParameter>();
+        public List<DatabaseParameter> Parameters { get; private set; } = new List<DatabaseParameter>();
 
         /// <summary>
         /// Gets the translation to apply after retrieving data from the data source.
         /// </summary>
-        public ITranslation PostTranslation { get; private set; }
+        public ITranslation OutputTranslation { get; private set; }
 
         /// <summary>
         /// Creates a new AdoRouteLoaderArguments instance.
@@ -39,7 +39,7 @@ namespace Handlr.Framework.Routing.Loaders
         /// <param name="absolutePath">The absolute path of the module</param>
         /// <param name="relativePath">The relative path of the module</param>
         /// <param name="configuration">The configuration markup for the loader arguments</param>
-        public AdoRouteLoaderArguments(string absolutePath, string relativePath, XElement configuration) : base(absolutePath, relativePath, configuration)
+        public DatabaseCallLoaderArguments(string absolutePath, string relativePath, XElement configuration) : base(absolutePath, relativePath, configuration)
         {
             ConnectionString = configuration.XPathEvaluate("string(./ConnectionString/text())") as string;
             Query = configuration.XPathEvaluate("string(./Query/text())") as string;
@@ -49,18 +49,18 @@ namespace Handlr.Framework.Routing.Loaders
                 Parameters =
                     (
                         from parameter in parameters.Elements()
-                        select new AdoParameter()
+                        select new DatabaseParameter()
                         {
                             Name = parameter.Attribute("name").Value,
                             Value = parameter.Attribute("value").Value,
-                            Type = (AdoParameter.DataType)Enum.Parse(typeof(AdoParameter.DataType), parameter.Attribute("type").Value, true),
+                            Type = (DatabaseParameter.DataType)Enum.Parse(typeof(DatabaseParameter.DataType), parameter.Attribute("type").Value, true),
                             Nullable = bool.Parse(parameter.Attribute("nullable").Value)
                         }
                     ).ToList();
             }
-            var postTranslationElement = configuration.XPathSelectElement("./PostTranslation");
-            if (postTranslationElement != null)
-                PostTranslation = Translators.Factory.Build(absolutePath, relativePath, postTranslationElement);
+            var outputTranslationElement = configuration.XPathSelectElement("./OutputTranslation");
+            if (outputTranslationElement != null)
+                OutputTranslation = Translators.Factory.Build(absolutePath, relativePath, outputTranslationElement);
         }
     }
 }

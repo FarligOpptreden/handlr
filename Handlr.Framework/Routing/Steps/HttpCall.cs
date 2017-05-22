@@ -10,22 +10,23 @@ using System.Linq;
 using Handlr.Framework.Routing.Types;
 using Handlr.Framework;
 using Handlr.Framework.Routing.Exceptions;
+using Handlr.Framework.Routing.Interfaces;
 
 namespace Handlr.Framework.Routing.Steps
 {
     /// <summary>
     /// Represents a step that executes an HTTP call.
     /// </summary>
-    [Tag("Route")]
-    public class HttpRoute : Base<HttpRouteLoaderArguments, RestFieldCache>
+    [Tag("HttpCall")]
+    public class HttpCall : Base<HttpCallLoaderArguments>
     {
         /// <summary>
         /// Creates a new HttpRoute instance.
         /// </summary>
         /// <param name="executionContext">The current execution context of the step</param>
-        public HttpRoute(IController executionContext) : base(executionContext) { }
+        public HttpCall(IController executionContext) : base(executionContext) { }
 
-        private Handlr.Framework.Data.Http.Connector GetConnector()
+        private Data.Http.Connector GetConnector()
         {
             switch (LoaderArguments.Method)
             {
@@ -51,26 +52,26 @@ namespace Handlr.Framework.Routing.Steps
         /// <returns>An updated field cache containing data returned by the HTTP call</returns>
         /// <exception cref="ArgumentNullException">Thrown when the fieldCache parameter is null</exception>
         /// <exception cref="ArgumentException">Thrown when the request method is not supported</exception>
-        public override RestFieldCache ExecuteStep(RestFieldCache fieldCache)
+        public override IFieldCache ExecuteStep(IFieldCache fieldCache)
         {
             if (fieldCache == null)
                 throw new ArgumentNullException("fieldCache");
 
             string requestBody = null;
-            if (LoaderArguments.PreTranslation != null)
+            if (LoaderArguments.InputTranslation != null)
             {
                 try
                 {
-                    var translated = LoaderArguments.PreTranslation.Translate(fieldCache);
+                    var translated = LoaderArguments.InputTranslation.Translate(fieldCache);
 
                     if (translated == null)
-                        throw new ParserException(string.Format("The input to the HTTP call could not be parsed using the pre translation of type \"{0}\".", LoaderArguments.PreTranslation.GetType()));
+                        throw new ParserException(string.Format("The input to the HTTP call could not be parsed using the pre translation of type \"{0}\".", LoaderArguments.InputTranslation.GetType()));
 
-                    requestBody = LoaderArguments.PreTranslation.ToString();
+                    requestBody = LoaderArguments.InputTranslation.ToString();
                 }
                 catch (Exception ex)
                 {
-                    throw new ParserException(string.Format("The input to the HTTP call could not be parsed using the pre translation of type \"{0}\": {1}", LoaderArguments.PreTranslation.GetType(), ex.Message));
+                    throw new ParserException(string.Format("The input to the HTTP call could not be parsed using the pre translation of type \"{0}\": {1}", LoaderArguments.InputTranslation.GetType(), ex.Message));
                 }
             }
             Dictionary<string, object> parameters = null; // TODO: Format the parameters
@@ -90,12 +91,12 @@ namespace Handlr.Framework.Routing.Steps
                 {
                     try
                     {
-                        RestFieldCache updatedCache = (RestFieldCache)LoaderArguments.PostTranslation.Translate(new JsonInput(result));
+                        IFieldCache updatedCache = LoaderArguments.OutputTranslation.Translate(new JsonFieldCache(result)); // TODO: Load relevant field cache based on what translator requires
                         fieldCache.AddRange(updatedCache);
                     }
                     catch (Exception ex)
                     {
-                        throw new ParserException(string.Format("The output from the HTTP call could not be parsed using the post translation of type \"{0}\": {1}", LoaderArguments.PostTranslation.GetType(), ex.Message));
+                        throw new ParserException(string.Format("The output from the HTTP call could not be parsed using the post translation of type \"{0}\": {1}", LoaderArguments.OutputTranslation.GetType(), ex.Message));
                     }
                 }
             }

@@ -2,33 +2,38 @@
 using System.Collections.Generic;
 using System.Linq;
 using Handlr.Framework.Routing.Interfaces;
+using System.Data;
 
 namespace Handlr.Framework.Routing.Types
 {
     /// <summary>
-    /// Represents a cache of fields that is used throughout a REST process.
+    /// Represents a cache of data tables that is used throughout a process.
     /// </summary>
-    public class RestFieldCache : Dictionary<string, object>, IFieldCache, IOutput, IInput
+    public class DataTableCache : Dictionary<string, object>, IFieldCache, IOutput, IInput
     {
         /// <summary>
-        /// Creates a new RestFieldCache instance.
+        /// Creates a new DataTableCache instance.
         /// </summary>
-        public RestFieldCache()
-        {
-        }
+        public DataTableCache() { }
 
         /// <summary>
-        /// Creates a new RestFieldCache instance.
+        /// Creates a new DataTableCache instance.
         /// </summary>
-        /// <param name="queryParams">The query parameters derived from the HTTP request</param>
-        /// <param name="formVariables">The form variables derived from the HTTP request</param>
-        /// <param name="pathVariables">The path variables derived from the HTTP request</param>
-        public RestFieldCache(Dictionary<string, object> queryParams, Dictionary<string, object> formVariables, Dictionary<string, object> pathVariables)
+        /// <param name="tables">The tables to add to the cache</param>
+        public DataTableCache(List<DataTable> tables)
         {
-            this
-                .AddRange(queryParams)
-                .AddRange(formVariables)
-                .AddRange(pathVariables);
+            if (tables == null || tables.Count == 0)
+                throw new ArgumentNullException("tables");
+
+            try
+            {
+                for (int i = 1; i <= tables.Count; i++)
+                    Add("Table" + i, tables[i - 1].ToDictionary()["Data"]);
+            }
+            catch
+            {
+                throw new ArgumentException("Could not add the supplied tables to the table cache");
+            }
         }
 
         /// <summary>
@@ -84,7 +89,7 @@ namespace Handlr.Framework.Routing.Types
         /// <returns></returns>
         public T GetValue<T>(string name)
         {
-            return (T)this[name];
+            return (T)Convert.ChangeType(this[name], typeof(T));
         }
     }
 }

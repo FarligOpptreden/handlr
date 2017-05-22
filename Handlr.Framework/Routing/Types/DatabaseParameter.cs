@@ -1,9 +1,9 @@
 ﻿namespace Handlr.Framework.Routing.Types
 {
     /// <summary>
-    /// Represents an ADO parameter to be parsed and passed to a query for execution.
+    /// Represents a database parameter to be parsed and passed to a query for execution.
     /// </summary>
-    public class AdoParameter
+    public class DatabaseParameter
     {
         /// <summary>
         /// Gets or sets the name of the parameter.
@@ -30,11 +30,11 @@
         /// </summary>
         public enum DataType
         {
-            Int,
-            Float,
-            String,
+            Bit,
             DateTime,
-            Bit
+            Float,
+            Int,
+            String
         }
     }
 }

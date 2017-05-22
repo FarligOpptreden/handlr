@@ -1,4 +1,6 @@
-﻿namespace Handlr.Framework.Routing.Interfaces
+﻿using System.Collections;
+
+namespace Handlr.Framework.Routing.Interfaces
 {
     /// <summary>
     /// An interface for building input data associated with an IRoute implementation.

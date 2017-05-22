@@ -15,7 +15,7 @@ namespace Handlr.Framework.Routing.Steps
     /// executed or not.
     /// </summary>
     [Tag("Condition")]
-    public class Condition : Base<ConditionLoaderArguments, RestFieldCache>
+    public class Condition : Base<ConditionLoaderArguments>
     {
         /// <summary>
         /// Gets the steps that should be executed if the condition succeeds.
@@ -35,7 +35,7 @@ namespace Handlr.Framework.Routing.Steps
         /// <param name="fieldCache">The field cache to use during the conditional check</param>
         /// <returns>An updated field cache containing data returned by all child steps</returns>
         /// <exception cref="ArgumentNullException">Thrown when the fieldCache parameter is null</exception>
-        public override RestFieldCache ExecuteStep(RestFieldCache fieldCache)
+        public override IFieldCache ExecuteStep(IFieldCache fieldCache)
         {
             if (fieldCache == null)
                 throw new ArgumentNullException("fieldCache");
@@ -57,7 +57,7 @@ namespace Handlr.Framework.Routing.Steps
         /// </summary>
         /// <param name="fieldCache">The field cache to use during the conditional check</param>
         /// <returns>A value indicating whether the conditional check succeeded or not</returns>
-        public bool PerformTest(RestFieldCache fieldCache)
+        public bool PerformTest(IFieldCache fieldCache)
         {
             string test = LoaderArguments.Test;
             while (TryParseBooleanBlock(test, out test)) { }

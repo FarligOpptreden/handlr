@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="config">
+    <xs:complexType>
+      <xs:sequence minOccurs="1">
+        <xs:element name="application" minOccurs="1" maxOccurs="1">
+          <xs:complexType>
+            <xs:attribute name="id" type="xs:string" use="required"/>
+            <xs:attribute name="name" type="xs:string" use="required"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="accounts" minOccurs="1" maxOccurs="1">
+          <xs:complexType>
+            <xs:attribute name="url" type="xs:string" use="required"/>
+            <xs:attribute name="passPhrase" type="xs:string" use="required"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="log" minOccurs="1" maxOccurs="1">
+          <xs:complexType>
+            <xs:attribute name="error" type="xs:string" use="required"/>
+            <xs:attribute name="info" type="xs:string" use="optional"/>
+            <xs:attribute name="debug" type="xs:string" use="optional"/>
+            <xs:attribute name="maxFileSize" type="xs:int" use="optional"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="dataSources" minOccurs="0" maxOccurs="1">
+          <xs:complexType>
+            <xs:sequence minOccurs="1" maxOccurs="unbounded">
+              <xs:element name="source">
+                <xs:complexType>
+                  <xs:attribute name="name" type="xs:string" use="required"/>
+                  <xs:attribute name="connectionString" type="xs:string" use="required"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="custom" minOccurs="0" maxOccurs="1"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

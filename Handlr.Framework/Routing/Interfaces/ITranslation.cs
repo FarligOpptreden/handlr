@@ -8,6 +8,6 @@
         void Load<T>(T loaderArgs)
             where T : ILoaderArguments;
 
-        IOutput Translate(IInput input);
+        IFieldCache Translate(IFieldCache input);
     }
 }

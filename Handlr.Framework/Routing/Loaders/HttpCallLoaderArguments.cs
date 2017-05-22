@@ -11,12 +11,12 @@ namespace Handlr.Framework.Routing.Loaders
     /// <summary>
     /// Represents the loader arguments for initializing an HTTP route.
     /// </summary>
-    public class HttpRouteLoaderArguments : Base
+    public class HttpCallLoaderArguments : Base
     {
         /// <summary>
         /// Gets the translation to be applied before performing the call to the HTTP resource.
         /// </summary>
-        public ITranslation PreTranslation { get; private set; }
+        public ITranslation InputTranslation { get; private set; }
 
         /// <summary>
         /// Gets the location of the HTTP resource.
@@ -42,7 +42,7 @@ namespace Handlr.Framework.Routing.Loaders
         /// <summary>
         /// Gets the translation to be applied after retrieving data from the HTTP resource.
         /// </summary>
-        public ITranslation PostTranslation { get; private set; }
+        public ITranslation OutputTranslation { get; private set; }
 
         /// <summary>
         /// Creates a new HttpRouteLoaderArguments instance.
@@ -50,11 +50,11 @@ namespace Handlr.Framework.Routing.Loaders
         /// <param name="absolutePath">The absolute path of the module</param>
         /// <param name="relativePath">The relative path of the module</param>
         /// <param name="configuration">The configuration markup for the loader arguments</param>
-        public HttpRouteLoaderArguments(string absolutePath, string relativePath, XElement configuration) : base(absolutePath, relativePath, configuration)
+        public HttpCallLoaderArguments(string absolutePath, string relativePath, XElement configuration) : base(absolutePath, relativePath, configuration)
         {
-            var preTranslationElement = configuration.XPathSelectElement("./PreTranslation");
+            var preTranslationElement = configuration.XPathSelectElement("./InputTranslation");
             if (preTranslationElement != null)
-                PreTranslation = Translators.Factory.Build(absolutePath, relativePath, preTranslationElement);
+                InputTranslation = Translators.Factory.Build(absolutePath, relativePath, preTranslationElement);
             Url = configuration.XPathEvaluate("string(./Url/text())") as string;
             string method = configuration.XPathEvaluate("string(./Method/text())") as string;
             Method = (Method)Enum.Parse(typeof(Method), method.ToLower().Substring(0, 1).ToUpper() + method.ToLower().Substring(1));
@@ -70,9 +70,9 @@ namespace Handlr.Framework.Routing.Loaders
                               };
                 // TODO: Map headers against LINQ result and check for data types
             }
-            var postTranslationElement = configuration.XPathSelectElement("./PostTranslation");
-            if (postTranslationElement != null)
-                PostTranslation = Translators.Factory.Build(absolutePath, relativePath, postTranslationElement);
+            var outputTranslationElement = configuration.XPathSelectElement("./OutputTranslation");
+            if (outputTranslationElement != null)
+                OutputTranslation = Translators.Factory.Build(absolutePath, relativePath, outputTranslationElement);
         }
     }
 }

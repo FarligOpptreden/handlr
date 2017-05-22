@@ -9,10 +9,8 @@ namespace Handlr.Framework.Routing.Translators
     /// <typeparam name="L">The type of loader arguments to use</typeparam>
     /// <typeparam name="I">The type of input object to consume</typeparam>
     /// <typeparam name="O">The type of output object to produce</typeparam>
-    public abstract class Base<L, I, O> : ITranslation
+    public abstract class Base<L> : ITranslation
         where L : ILoaderArguments
-        where I : IInput
-        where O : IOutput
     {
         /// <summary>
         /// Gets the loader arguments associated with the translation
@@ -42,17 +40,7 @@ namespace Handlr.Framework.Routing.Translators
         /// </summary>
         /// <param name="input">The input to use for the translation</param>
         /// <returns>The output produced by the translation</returns>
-        public abstract O Translate(I input);
-
-        /// <summary>
-        /// Performs the translation using the specified input.
-        /// </summary>
-        /// <param name="input">The input to use for the translation</param>
-        /// <returns>The output produced by the translation</returns>
-        public IOutput Translate(IInput input)
-        {
-            return Translate((I)input);
-        }
+        public abstract IFieldCache Translate(IFieldCache input);
 
         /// <summary>
         /// Performs the translation using the specified input.
@@ -62,13 +50,13 @@ namespace Handlr.Framework.Routing.Translators
         /// <typeparam name="TO">The type of output to produce</typeparam>
         /// <returns>The output produced by the translation</returns>
         public TO Translate<TI, TO>(TI input)
-            where TI : IInput
-            where TO : IOutput
+            where TI : IFieldCache, IInput
+            where TO : IFieldCache, IOutput
         {
             if (input == null)
                 throw new ArgumentNullException("input");
 
-            return (TO)(IOutput)Translate((I)(IInput)input);
+            return (TO)Translate(input);
         }
     }
 }
