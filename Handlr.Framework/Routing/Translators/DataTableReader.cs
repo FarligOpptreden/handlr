@@ -1,11 +1,16 @@
-﻿using Handlr.Framework.Routing.Types;
+﻿using Handlr.Framework.Routing.Exceptions;
+using Handlr.Framework.Routing.Interfaces;
+using Handlr.Framework.Routing.Types;
+using System;
+using System.Collections.Generic;
+using System.Data;
 
 namespace Handlr.Framework.Routing.Translators
 {
     /// <summary>
     /// Translates the specified data table input to a standard generic field cache.
     /// </summary>
-    public class DataTableReader : JsonParser<DataTableCache, GenericFieldCache>
+    public class DataTableReader : JsonParser
     {
         private GenericFieldCache cache;
 
@@ -14,8 +19,16 @@ namespace Handlr.Framework.Routing.Translators
         /// </summary>
         /// <param name="input">The data table input to translate</param>
         /// <returns>A REST field cache containing all keys produced by the translation</returns>
-        public override GenericFieldCache Translate(DataTableCache input)
+        public override IFieldCache Translate(IFieldCache input)
         {
+            try
+            {
+                input = new DataTableCache(input as List<DataTable>);
+            }
+            catch (Exception ex)
+            {
+                throw new ParserException("The input string could not be parsed to List<DataTable>: " + ex.Message);
+            }
             cache = new GenericFieldCache();
             cache.AddRange(LoadAndParseTemplate(input));
             return cache;
