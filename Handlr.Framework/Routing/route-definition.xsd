@@ -20,7 +20,7 @@
           <xs:attribute name="type" use="required">
             <xs:simpleType>
               <xs:restriction base="xs:string">
-                <xs:enumeration value="Websure.Routing.Steps.RegexValidation" />
+                <xs:enumeration value="Handlr.Framework.Routing.Steps.RegexValidation" />
               </xs:restriction>
             </xs:simpleType>
           </xs:attribute>
@@ -93,9 +93,9 @@
                 <xs:attribute name="type" use="required">
                   <xs:simpleType>
                     <xs:restriction base="xs:string">
-                      <xs:enumeration value="Websure.Routing.Translators.JsonReader" />
-                      <xs:enumeration value="Websure.Routing.Translators.TextReader" />
-                      <xs:enumeration value="Websure.Routing.Translators.XmlReader" />
+                      <xs:enumeration value="Handlr.Framework.Routing.Translators.JsonReader" />
+                      <xs:enumeration value="Handlr.Framework.Routing.Translators.TextReader" />
+                      <xs:enumeration value="Handlr.Framework.Routing.Translators.XmlReader" />
                     </xs:restriction>
                   </xs:simpleType>
                 </xs:attribute>
@@ -161,7 +161,7 @@
                 <xs:attribute name="type" use="required">
                   <xs:simpleType>
                     <xs:restriction base="xs:string">
-                      <xs:enumeration value="Websure.Routing.Translators.DataTableReader" />
+                      <xs:enumeration value="Handlr.Framework.Routing.Translators.DataTableReader" />
                     </xs:restriction>
                   </xs:simpleType>
                 </xs:attribute>
@@ -236,6 +236,13 @@
             <xs:complexType>
               <!-- ///// Attributes: RenderView ///// -->
               <xs:attribute name="view" type="xs:string" use="required" />
+            </xs:complexType>
+          </xs:element>
+          <!-- ///// Element: RenderData ///// -->
+          <xs:element name="RenderData" minOccurs="0" maxOccurs="1">
+            <xs:complexType>
+              <!-- ///// Attributes: RenderData ///// -->
+              <xs:attribute name="dataKey" type="xs:string" use="required" />
             </xs:complexType>
           </xs:element>
         </xs:choice>

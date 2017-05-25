@@ -43,6 +43,11 @@ namespace Handlr.Framework.Routing.Process
         public string OutputView { get; private set; }
 
         /// <summary>
+        /// Gets the data to load for the output of the process.
+        /// </summary>
+        public string OutputData { get; private set; }
+
+        /// <summary>
         /// Initializes the process with the specified loader arguments.
         /// </summary>
         /// <param name="executionContext">The current execution context of the process</param>
@@ -56,20 +61,23 @@ namespace Handlr.Framework.Routing.Process
             LoaderArguments = loaderArgs;
             // Load the steps defined in the definition
             var stepElements = from step in LoaderArguments.Configuration.Elements()
-                               where step.Name != "PreTranslation" && step.Name != "PostTranslation" && step.Name != "Output"
+                               where step.Name != "InputTranslation" && step.Name != "OutputTranslation" && step.Name != "RenderView" && step.Name != "RenderData"
                                select step;
             foreach (var step in stepElements)
                 Steps.Add(Routing.Steps.Factory.Build(LoaderArguments.AbsolutePath, LoaderArguments.RelativePath, step, executionContext));
 
-            var preTranslationElement = LoaderArguments.Configuration.XPathSelectElement("./PreTranslation");
+            var preTranslationElement = LoaderArguments.Configuration.XPathSelectElement("./InputTranslation");
             if (preTranslationElement != null)
                 InputTranslation = Translators.Factory.Build(LoaderArguments.AbsolutePath, LoaderArguments.RelativePath, preTranslationElement);
-            var postTranslationElement = LoaderArguments.Configuration.XPathSelectElement("./PostTranslation");
+            var postTranslationElement = LoaderArguments.Configuration.XPathSelectElement("./OutputTranslation");
             if (postTranslationElement != null)
                 OutputTranslation = Translators.Factory.Build(LoaderArguments.AbsolutePath, LoaderArguments.RelativePath, postTranslationElement);
-            var outputElement = LoaderArguments.Configuration.XPathSelectElement("./Output");
-            if (outputElement != null && outputElement.Attribute("view") != null)
-                OutputView = outputElement.Attribute("view").Value.Replace("{RelativePath}", LoaderArguments.RelativePath);
+            var outputViewElement = LoaderArguments.Configuration.XPathSelectElement("./RenderView");
+            if (outputViewElement != null && outputViewElement.Attribute("view") != null)
+                OutputView = outputViewElement.Attribute("view").Value.Replace("{RelativePath}", LoaderArguments.RelativePath);
+            var outputDataElement = LoaderArguments.Configuration.XPathSelectElement("./RenderData");
+            if (outputDataElement != null && outputDataElement.Attribute("dataKey") != null)
+                OutputData = outputDataElement.Attribute("dataKey").Value;
         }
 
         /// <summary>

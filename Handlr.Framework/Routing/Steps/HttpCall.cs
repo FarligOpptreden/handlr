@@ -74,7 +74,7 @@ namespace Handlr.Framework.Routing.Steps
                     throw new ParserException(string.Format("The input to the HTTP call could not be parsed using the pre translation of type \"{0}\": {1}", LoaderArguments.InputTranslation.GetType(), ex.Message));
                 }
             }
-            Dictionary<string, object> parameters = null; // TODO: Format the parameters
+            Dictionary<string, object> parameters = null;
             Dictionary<string, string> headers =
                 (
                     from h in LoaderArguments.Headers
@@ -91,7 +91,7 @@ namespace Handlr.Framework.Routing.Steps
                 {
                     try
                     {
-                        IFieldCache updatedCache = LoaderArguments.OutputTranslation.Translate(new JsonFieldCache(result)); // TODO: Load relevant field cache based on what translator requires
+                        IFieldCache updatedCache = LoaderArguments.OutputTranslation.Translate(new StringFieldCache(result));
                         fieldCache.AddRange(updatedCache);
                     }
                     catch (Exception ex)

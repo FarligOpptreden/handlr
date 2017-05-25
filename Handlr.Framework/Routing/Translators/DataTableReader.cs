@@ -21,14 +21,6 @@ namespace Handlr.Framework.Routing.Translators
         /// <returns>A REST field cache containing all keys produced by the translation</returns>
         public override IFieldCache Translate(IFieldCache input)
         {
-            try
-            {
-                input = new DataTableCache(input as List<DataTable>);
-            }
-            catch (Exception ex)
-            {
-                throw new ParserException("The input string could not be parsed to List<DataTable>: " + ex.Message);
-            }
             cache = new GenericFieldCache();
             cache.AddRange(LoadAndParseTemplate(input));
             return cache;

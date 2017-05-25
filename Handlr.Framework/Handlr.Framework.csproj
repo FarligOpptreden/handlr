@@ -140,6 +140,7 @@
     <Compile Include="Routing\Translators\Base.cs" />
     <Compile Include="Routing\Translators\Factory.cs" />
     <Compile Include="Routing\Translators\JsonParser.cs" />
+    <Compile Include="Routing\Translators\XmlReader.cs" />
     <Compile Include="Routing\Translators\JsonReader.cs" />
     <Compile Include="Routing\Translators\JsonWriter.cs" />
     <Compile Include="Routing\Translators\Parser.cs" />
@@ -148,6 +149,7 @@
     <Compile Include="Routing\Translators\XmlParser.cs" />
     <Compile Include="Routing\Translators\XmlWriter.cs" />
     <Compile Include="Routing\Types\DatabaseParameter.cs" />
+    <Compile Include="Routing\Types\XmlFieldCache.cs" />
     <Compile Include="Routing\Types\JsonFieldCache.cs" />
     <Compile Include="Routing\Types\DataTableCache.cs" />
     <Compile Include="Routing\Types\PostFieldCache.cs" />
