@@ -38,7 +38,7 @@ namespace Handlr.Framework.Routing.Translators
             var currentType = translationType;
             while (loaderType == null || currentType != typeof(object))
             {
-                if (typeof(ITranslation).IsAssignableFrom(currentType) && currentType.GetGenericArguments().Count() == 3)
+                if (typeof(ITranslation).IsAssignableFrom(currentType) && currentType.GetGenericArguments().Count() == 1)
                 {
                     loaderType = currentType.GetGenericArguments()[0];
                 }

@@ -53,14 +53,14 @@ namespace Handlr.Framework.Routing.Steps
             var currentType = stepType;
             while (loaderType == null || currentType != typeof(object))
             {
-                if (typeof(IStep).IsAssignableFrom(currentType) && currentType.GetGenericArguments().Count() == 2)
+                if (typeof(IStep).IsAssignableFrom(currentType) && currentType.GetGenericArguments().Count() == 1)
                 {
                     loaderType = currentType.GetGenericArguments()[0];
                     break;
                 }
                 currentType = currentType.BaseType;
             }
-            var fieldCacheType = currentType.GetGenericArguments()[1];
+            var fieldCacheType = currentType.GetGenericArguments()[0];
 
             if (loaderType == null || fieldCacheType == null)
                 throw new TargetInvocationException("Invalid IStep implementation supplied. Please supply a type that inherits from Steps.Base<L, C>.", null);

@@ -1,9 +1,5 @@
-﻿using Handlr.Framework.Routing.Exceptions;
-using Handlr.Framework.Routing.Interfaces;
+﻿using Handlr.Framework.Routing.Interfaces;
 using Handlr.Framework.Routing.Types;
-using System;
-using System.Collections.Generic;
-using System.Data;
 
 namespace Handlr.Framework.Routing.Translators
 {
