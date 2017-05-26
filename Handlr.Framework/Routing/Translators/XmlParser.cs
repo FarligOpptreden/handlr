@@ -32,7 +32,7 @@ namespace Handlr.Framework.Routing.Translators
         }
 
         /// <summary>
-        /// Overriden implementation of the abstract method
+        /// Overridden implementation of the abstract method
         /// </summary>
         /// <returns></returns>
         protected override bool TryParseForLoop(string value, IFieldCache inputData, out string parsedValue)
@@ -65,7 +65,7 @@ namespace Handlr.Framework.Routing.Translators
                 {
                     object elementMember = Utilities.GetDataMember(fieldMatch.Value.Split('.'), element);
                     string replaceMatch = fieldMatch.Value.Replace(".", "\\.") + _FieldTermination;
-                    elementTemplate = Regex.Replace(elementTemplate, replaceMatch, elementMember.ToJson(), RegexOptions.IgnoreCase);
+                    elementTemplate = Regex.Replace(elementTemplate, replaceMatch, elementMember.ToDictionary().ToXml().XPathSelectElement("//xml/*").ToString(), RegexOptions.IgnoreCase);
                 }
                 parsedTemplate += elementTemplate + _Concat;
             }
@@ -78,7 +78,7 @@ namespace Handlr.Framework.Routing.Translators
         }
 
         /// <summary>
-        /// Overriden implementation of the abstract method
+        /// Overridden implementation of the abstract method
         /// </summary>
         /// <returns></returns>
         protected override bool TryParseDataMembers(string value, IFieldCache inputData, out string parsedValue)

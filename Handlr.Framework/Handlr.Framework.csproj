@@ -123,7 +123,7 @@
     <Compile Include="Routing\Loaders\RegexValidationLoaderArguments.cs" />
     <Compile Include="Routing\Loaders\RestProcessLoaderArguments.cs" />
     <Compile Include="Routing\Loaders\TranslationLoaderArguments.cs" />
-    <Compile Include="Routing\Loaders\XsltTranslationLoaderArguments.cs" />
+    <Compile Include="Routing\Loaders\XsltTransformLoaderArguments.cs" />
     <Compile Include="Routing\Process\Factory.cs" />
     <Compile Include="Routing\Process\RestProcess.cs" />
     <Compile Include="Routing\Process\RestProcessFactoryArguments.cs" />
@@ -136,6 +136,7 @@
     <Compile Include="Routing\Steps\Factory.cs" />
     <Compile Include="Routing\Steps\HttpCall.cs" />
     <Compile Include="Routing\Steps\RegexValidation.cs" />
+    <Compile Include="Routing\Steps\XsltTransform.cs" />
     <Compile Include="Routing\Translators\DataTableReader.cs" />
     <Compile Include="Routing\Translators\Base.cs" />
     <Compile Include="Routing\Translators\Factory.cs" />

@@ -52,9 +52,9 @@ namespace Handlr.Framework.Routing.Loaders
         /// <param name="configuration">The configuration markup for the loader arguments</param>
         public HttpCallLoaderArguments(string absolutePath, string relativePath, XElement configuration) : base(absolutePath, relativePath, configuration)
         {
-            var preTranslationElement = configuration.XPathSelectElement("./InputTranslation");
-            if (preTranslationElement != null)
-                InputTranslation = Translators.Factory.Build(absolutePath, relativePath, preTranslationElement);
+            var inputTranslationElement = configuration.XPathSelectElement("./InputTranslation");
+            if (inputTranslationElement != null)
+                InputTranslation = Translators.Factory.Build(absolutePath, relativePath, inputTranslationElement);
             Url = configuration.XPathEvaluate("string(./Url/text())") as string;
             string method = configuration.XPathEvaluate("string(./Method/text())") as string;
             Method = (Method)Enum.Parse(typeof(Method), method.ToLower().Substring(0, 1).ToUpper() + method.ToLower().Substring(1));

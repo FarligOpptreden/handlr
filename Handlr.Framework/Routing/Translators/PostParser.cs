@@ -40,7 +40,7 @@ namespace Handlr.Framework.Routing.Translators
         }
 
         /// <summary>
-        /// Overriden implementation of the abstract method
+        /// Overridden implementation of the abstract method
         /// </summary>
         /// <returns></returns>
         protected override bool TryParseForLoop(string value, IFieldCache inputData, out string parsedValue)
@@ -86,7 +86,7 @@ namespace Handlr.Framework.Routing.Translators
         }
 
         /// <summary>
-        /// Overriden implementation of the abstract method
+        /// Overridden implementation of the abstract method
         /// </summary>
         /// <returns></returns>
         protected override bool TryParseDataMembers(string value, IFieldCache inputData, out string parsedValue)

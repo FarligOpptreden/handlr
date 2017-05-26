@@ -69,9 +69,9 @@ namespace Handlr.Framework.Routing.Process
             var inputTranslationElement = LoaderArguments.Configuration.XPathSelectElement("./InputTranslation");
             if (inputTranslationElement != null)
                 InputTranslation = Translators.Factory.Build(LoaderArguments.AbsolutePath, LoaderArguments.RelativePath, inputTranslationElement);
-            var postTranslationElement = LoaderArguments.Configuration.XPathSelectElement("./OutputTranslation");
-            if (postTranslationElement != null)
-                OutputTranslation = Translators.Factory.Build(LoaderArguments.AbsolutePath, LoaderArguments.RelativePath, postTranslationElement);
+            var outputTranslationElement = LoaderArguments.Configuration.XPathSelectElement("./OutputTranslation");
+            if (outputTranslationElement != null)
+                OutputTranslation = Translators.Factory.Build(LoaderArguments.AbsolutePath, LoaderArguments.RelativePath, outputTranslationElement);
             var outputViewElement = LoaderArguments.Configuration.XPathSelectElement("./RenderView");
             if (outputViewElement != null && outputViewElement.Attribute("view") != null)
                 OutputView = outputViewElement.Attribute("view").Value.Replace("{RelativePath}", LoaderArguments.RelativePath);
