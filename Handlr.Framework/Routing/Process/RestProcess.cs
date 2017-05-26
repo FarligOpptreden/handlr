@@ -66,9 +66,9 @@ namespace Handlr.Framework.Routing.Process
             foreach (var step in stepElements)
                 Steps.Add(Routing.Steps.Factory.Build(LoaderArguments.AbsolutePath, LoaderArguments.RelativePath, step, executionContext));
 
-            var preTranslationElement = LoaderArguments.Configuration.XPathSelectElement("./InputTranslation");
-            if (preTranslationElement != null)
-                InputTranslation = Translators.Factory.Build(LoaderArguments.AbsolutePath, LoaderArguments.RelativePath, preTranslationElement);
+            var inputTranslationElement = LoaderArguments.Configuration.XPathSelectElement("./InputTranslation");
+            if (inputTranslationElement != null)
+                InputTranslation = Translators.Factory.Build(LoaderArguments.AbsolutePath, LoaderArguments.RelativePath, inputTranslationElement);
             var postTranslationElement = LoaderArguments.Configuration.XPathSelectElement("./OutputTranslation");
             if (postTranslationElement != null)
                 OutputTranslation = Translators.Factory.Build(LoaderArguments.AbsolutePath, LoaderArguments.RelativePath, postTranslationElement);
@@ -132,7 +132,10 @@ namespace Handlr.Framework.Routing.Process
                     }
 
             if (output.Success)
-                output.SetData(OutputTranslation != null ? OutputTranslation.Translate(fieldCache) : fieldCache);
+            {
+                var translatedCache = OutputTranslation != null ? OutputTranslation.Translate(fieldCache) : fieldCache;
+                output.SetData((!string.IsNullOrEmpty(OutputData) ? translatedCache[OutputData] : translatedCache));
+            }
             return output;
         }
     }

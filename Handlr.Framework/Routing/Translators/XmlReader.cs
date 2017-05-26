@@ -2,13 +2,14 @@
 using Handlr.Framework.Routing.Exceptions;
 using Handlr.Framework.Routing.Types;
 using Handlr.Framework.Routing.Interfaces;
+using System.Xml.XPath;
 
 namespace Handlr.Framework.Routing.Translators
 {
     /// <summary>
     /// Translates the specified Xml string input to a standard generic field cache.
     /// </summary>
-    public class XmlReader : JsonParser
+    public class XmlReader : XmlParser
     {
         /// <summary>
         /// Translates the supplied Xml string to a generic field cache.
@@ -27,7 +28,8 @@ namespace Handlr.Framework.Routing.Translators
                 throw new ParserException("The input string could not be parsed to Xml: " + ex.Message);
             }
             var cache = new GenericFieldCache();
-            cache.AddRange(LoadAndParseTemplate(new GenericFieldCache((input as XmlFieldCache).ToDictionary())));
+            var parsedTemplate = LoadAndParseTemplate(new GenericFieldCache((input as XmlFieldCache).ToDictionary()));
+            cache.Add(parsedTemplate.Root.Name.LocalName, parsedTemplate.Root.XPathSelectElement("./*").ToString());
             return cache;
         }
     }
