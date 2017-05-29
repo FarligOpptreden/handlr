@@ -14,6 +14,8 @@ namespace Handlr.Framework.Routing.Steps
     public abstract class Base<L> : IStep
         where L : ILoaderArguments
     {
+        private const string MEMBER_REGEX = "([a-zA-Z0-9\\[\\]\\.\\/\\-_](\\(\\))?)+";
+
         private IFieldCache FieldCache { get; set; }
 
         /// <summary>
@@ -91,11 +93,17 @@ namespace Handlr.Framework.Routing.Steps
             foreach (Match match in Regex.Matches(value, "{.[^{}]+}", RegexOptions.IgnoreCase))
             {
                 string matchValue = match.Value;
+                // Parse Step code blocks
+                while (TryParseStepBlock(matchValue, out matchValue)) { }
+                value = value.Replace(match.Value, matchValue);
+                // Parse Config code blocks
                 while (TryParseConfigBlock(matchValue, out matchValue)) { }
                 value = value.Replace(match.Value, matchValue);
-                while (TryParseDecryptBlock(matchValue, out matchValue)) { }
-                value = value.Replace(match.Value, matchValue);
+                // Parse field value code blocks
                 while (TryParseFieldValue(matchValue, out matchValue)) { }
+                value = value.Replace(match.Value, matchValue);
+                // Parse Decrypt code blocks
+                while (TryParseDecryptBlock(matchValue, out matchValue)) { }
                 value = value.Replace(match.Value, matchValue);
             }
             value = value.Replace("{", "").Replace("}", "");
@@ -136,7 +144,7 @@ namespace Handlr.Framework.Routing.Steps
         /// <returns>A value indicating whether the code block could be found or not</returns>
         protected bool TryParseConfigBlock(string value, out string parsedValue)
         {
-            var match = Regex.Match(value, "Config\\.([a-zA-Z0-9\\[\\]\\.\\/\\-_](\\(\\))?)+", RegexOptions.IgnoreCase);
+            var match = Regex.Match(value, "Config\\." + MEMBER_REGEX, RegexOptions.IgnoreCase);
             if (match == null || !match.Success)
             {
                 parsedValue = value;
@@ -167,6 +175,25 @@ namespace Handlr.Framework.Routing.Steps
                 default:
                     throw new ParserException(string.Format("The configuration property \"{0}\" could not be parsed.", prop));
             }
+            return true;
+        }
+
+        /// <summary>
+        /// Try and find a "Step" code block in the specified string and parse it if possible.
+        /// </summary>
+        /// <param name="value">The value to test for the code block</param>
+        /// <param name="parsedValue">The parsed value with the evaluated code block's value</param>
+        /// <returns>A value indicating whether the code block could be found or not</returns>
+        protected bool TryParseStepBlock(string value, out string parsedValue)
+        {
+            var match = Regex.Match(value, "Step\\." + MEMBER_REGEX, RegexOptions.IgnoreCase);
+            if (match == null || !match.Success)
+            {
+                parsedValue = value;
+                return false;
+            }
+            string[] parts = match.Value.Split('.');
+            parsedValue = value.Replace(match.Value, Utilities.GetDataMember(parts, this).ToString());
             return true;
         }
 
@@ -260,7 +287,8 @@ namespace Handlr.Framework.Routing.Steps
         /// <returns>A value indicating whether the code block could be found or not</returns>
         protected bool TryParseFieldValue(string value, out string parsedValue)
         {
-            if (string.IsNullOrEmpty(value) || !Regex.IsMatch(value, "\\{.+\\}"))
+            var match = Regex.Match(value, "Fields\\." + MEMBER_REGEX, RegexOptions.IgnoreCase);
+            if (match == null || !match.Success)
             {
                 parsedValue = value;
                 return false;
@@ -271,7 +299,8 @@ namespace Handlr.Framework.Routing.Steps
                 parsedValue = "";
                 return false;
             }
-            parsedValue = FieldCache.GetValue<object>(valueToCheck).ToString();
+            string[] parts = match.Value.Split('.');
+            parsedValue = value.Replace(match.Value, Utilities.GetDataMember(parts, FieldCache).ToString());
             return true;
         }
     }

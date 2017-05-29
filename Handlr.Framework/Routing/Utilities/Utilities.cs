@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Handlr.Framework.Routing.Exceptions;
 using Handlr.Framework.Routing.Interfaces;
 using Handlr.Framework.Web.Interfaces;
+using System.Reflection;
 
 namespace Handlr.Framework.Routing
 {
@@ -57,8 +58,14 @@ namespace Handlr.Framework.Routing
             for (int i = 0; i < pathParts.Length; i++)
             {
                 string part = pathParts[i];
+
+                // If the current part starts with "@" (i.e. "@input") continue to the next part, as this assumes
+                // the data member is being access inside a translation and @input would refer to the field cache
                 if (part.StartsWith("@"))
                     continue;
+
+                // If the current part contains indexing accessors "[" and "]" (i.e. input[1]), interpret is as
+                // an array or list to get the indexed object
                 if (part.Contains("[") && part.Contains("]"))
                 {
                     string propertyString = part.Substring(0, part.IndexOf("["));
@@ -70,8 +77,29 @@ namespace Handlr.Framework.Routing
 
                     try
                     {
-                        dataMember = (dataMember as Dictionary<string, object>)[propertyString];
-                        dataMember = (dataMember as List<object>)[indexer];
+                        if (dataMember is Dictionary<string, object>)
+                        {
+                            // The data member is a dictionary, so cast it accordingly to grab the indexed object
+                            dataMember = (dataMember as Dictionary<string, object>)[propertyString];
+                            dataMember = (dataMember as List<object>)[indexer];
+                            continue;
+                        }
+                        // The data member is not a dictionary, so use reflection to get to the indexed object
+                        var memberType = dataMember.GetType();
+                        var property = memberType.GetProperty(propertyString, BindingFlags.Public | BindingFlags.Instance);
+                        dataMember = property.GetValue(dataMember);
+                        memberType = dataMember.GetType();
+                        // Assume the data member is an array or list, so search for the indexer property and use it to grab the indexed object
+                        PropertyInfo indexProp = null;
+                        foreach (var prop in memberType.GetProperties(BindingFlags.Instance | BindingFlags.Public))
+                        {
+                            if (prop.GetIndexParameters().Length > 0)
+                            {
+                                indexProp = prop;
+                                break;
+                            }
+                        }
+                        dataMember = indexProp.GetValue(dataMember, new object[] { indexer });
                     }
                     catch
                     {
@@ -80,14 +108,19 @@ namespace Handlr.Framework.Routing
 
                     continue;
                 }
-                if (i == 0)
-                {
-                    dataMember = (dataMember as Dictionary<string, object>)[part];
-                    continue;
-                }
                 try
                 {
-                    dataMember = (dataMember as Dictionary<string, object>)[part];
+                    // Access the data member on the contextual dataMember based on the part name
+                    if (dataMember is Dictionary<string, object>)
+                    {
+                        // The data member is a dictionary, so cast it accordingly to grab it
+                        dataMember = (dataMember as Dictionary<string, object>)[part];
+                        continue;
+                    }
+                    // The data member is not a dictionary, so use reflection to grab it
+                    var memberType = dataMember.GetType();
+                    var property = memberType.GetProperty(part, BindingFlags.Public | BindingFlags.Instance);
+                    dataMember = property.GetValue(dataMember);
                 }
                 catch (Exception ex)
                 {

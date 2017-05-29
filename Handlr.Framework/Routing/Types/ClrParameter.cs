@@ -9,6 +9,8 @@ namespace Handlr.Framework.Routing.Types
 
         public string ValueKey { get; set; }
 
+        public object Value { get; private set; }
+
         public ClrParameter() { }
 
         public ClrParameter(string typeName, string valueKey)
@@ -19,6 +21,14 @@ namespace Handlr.Framework.Routing.Types
             if (Type == null)
                 throw new ParserException(string.Format("The specified type \"{0}\" could not be evaluated", typeName));
             ValueKey = valueKey;
+        }
+
+        public object SetValue(object value)
+        {
+            if (value.GetType() != Type)
+                throw new ParserException(string.Format("An object of type \"{0}\" is not compatible with the configured type \"{1}\"", value.GetType().ToString(), Type.ToString()));
+            Value = value;
+            return Value;
         }
     }
 }
