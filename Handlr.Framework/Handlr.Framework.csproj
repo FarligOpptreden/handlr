@@ -119,6 +119,7 @@
     <Compile Include="Routing\Loaders\DatabaseCallLoaderArgument.cs" />
     <Compile Include="Routing\Loaders\Base.cs" />
     <Compile Include="Routing\Loaders\ConditionLoaderArguments.cs" />
+    <Compile Include="Routing\Loaders\ClrCallLoaderArguments.cs" />
     <Compile Include="Routing\Loaders\HttpCallLoaderArguments.cs" />
     <Compile Include="Routing\Loaders\RegexValidationLoaderArguments.cs" />
     <Compile Include="Routing\Loaders\RestProcessLoaderArguments.cs" />
@@ -136,6 +137,7 @@
     <Compile Include="Routing\Steps\Factory.cs" />
     <Compile Include="Routing\Steps\HttpCall.cs" />
     <Compile Include="Routing\Steps\RegexValidation.cs" />
+    <Compile Include="Routing\Steps\ClrCall.cs" />
     <Compile Include="Routing\Steps\XsltTransform.cs" />
     <Compile Include="Routing\Translators\DataTableReader.cs" />
     <Compile Include="Routing\Translators\Base.cs" />
@@ -149,6 +151,7 @@
     <Compile Include="Routing\Translators\PostWriter.cs" />
     <Compile Include="Routing\Translators\XmlParser.cs" />
     <Compile Include="Routing\Translators\XmlWriter.cs" />
+    <Compile Include="Routing\Types\ClrParameter.cs" />
     <Compile Include="Routing\Types\DatabaseParameter.cs" />
     <Compile Include="Routing\Types\XmlFieldCache.cs" />
     <Compile Include="Routing\Types\JsonFieldCache.cs" />

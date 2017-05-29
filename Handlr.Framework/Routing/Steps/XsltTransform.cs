@@ -7,6 +7,8 @@ using System.IO;
 using Handlr.Framework.Routing.Exceptions;
 using System.Xml.Xsl;
 using System.Xml;
+using System.Xml.Linq;
+using System.Collections.Generic;
 
 namespace Handlr.Framework.Routing.Steps
 {
@@ -39,27 +41,34 @@ namespace Handlr.Framework.Routing.Steps
             if (!fi.Exists)
                 throw new ParserException(string.Format("The translation file \"{0}\" could not be loaded as the file does not exist", path));
 
-            string resultXML;
+            string transformedXml;
             XslCompiledTransform translator = new XslCompiledTransform();
-            using (StringReader sr = new StringReader(path))
+            try
             {
-                using (XmlReader xr = XmlReader.Create(sr))
+                using (XmlReader stylesheetReader = XmlReader.Create(path))
                 {
-                    translator.Load(xr);
-                }
-            }            
-            using (StringReader sr = new StringReader(fieldCache["ApiPolicies"].ToString()))
-            {
-                using (XmlReader xr = XmlReader.Create(sr))
-                {
-                    using (StringWriter sw = new StringWriter())
-                    {
-                        translator.Transform(xr, null, sw);
-                        resultXML = sw.ToString();
-                    }
+                    translator.Load(stylesheetReader);
                 }
             }
-            return null;
+            catch (Exception ex)
+            {
+                throw new ParserException(string.Format("The Xsl file \"{0}\" could not be loaded: {1}", path, ex.Message));
+            }
+
+            try
+            {
+                using (StringWriter sw = new StringWriter())
+                {
+                    translator.Transform(XDocument.Parse(fieldCache[LoaderArguments.TemplateInputKey].ToString()).CreateReader(), null, sw);
+                    transformedXml = sw.ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new ParserException(string.Format("The Xml could not be transformed: {0}", ex.Message));
+            }
+            fieldCache.AddRange(new Dictionary<string, object>() { { LoaderArguments.TemplateOutputKey, transformedXml } });
+            return fieldCache;
         }
     }
 }

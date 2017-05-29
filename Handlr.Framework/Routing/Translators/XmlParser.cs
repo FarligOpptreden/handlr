@@ -7,10 +7,18 @@ using System.Xml.XPath;
 
 namespace Handlr.Framework.Routing.Translators
 {
+    /// <summary>
+    /// Represents a base class for building Xml structured body readers or writers.
+    /// </summary>
     public abstract class XmlParser : Parser
     {
         public XmlParser() : base("", "", "", "(?=,|\\s|\\r|\\n|}|\\))") { }
 
+        /// <summary>
+        /// Loads the translation file at the configured location and parses the supplied input according to the template.
+        /// </summary>
+        /// <param name="fieldCache">The field cache to parse in the template</param>
+        /// <returns>A XDocument field cache representing the parsed template</returns>
         protected XDocument LoadAndParseTemplate(IFieldCache fieldCache)
         {
             string template = LoadTemplate();
