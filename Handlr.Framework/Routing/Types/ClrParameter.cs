@@ -25,7 +25,9 @@ namespace Handlr.Framework.Routing.Types
 
         public object SetValue(object value)
         {
-            if (value.GetType() != Type)
+            Type valueType = Type.GetType(value.GetType().AssemblyQualifiedName);
+            Type typeType = Type.GetType(Type.AssemblyQualifiedName);
+            if (valueType != typeType && !typeType.IsAssignableFrom(valueType))
                 throw new ParserException(string.Format("An object of type \"{0}\" is not compatible with the configured type \"{1}\"", value.GetType().ToString(), Type.ToString()));
             Value = value;
             return Value;

@@ -31,13 +31,13 @@ namespace Handlr.Framework.Routing.Steps
             switch (LoaderArguments.Method)
             {
                 case Method.Get:
-                    return Core.Factory<Get>(ParseValue(LoaderArguments.Url), null, true);
+                    return Core.Factory<Get>(ParseValue(LoaderArguments.Url) as string, null, true);
                 case Method.Put:
-                    return Core.Factory<Put>(ParseValue(LoaderArguments.Url), null, true);
+                    return Core.Factory<Put>(ParseValue(LoaderArguments.Url) as string, null, true);
                 case Method.Post:
-                    return Core.Factory<Post>(ParseValue(LoaderArguments.Url), null, true);
+                    return Core.Factory<Post>(ParseValue(LoaderArguments.Url) as string, null, true);
                 case Method.Delete:
-                    return Core.Factory<Delete>(ParseValue(LoaderArguments.Url), null, true);
+                    return Core.Factory<Delete>(ParseValue(LoaderArguments.Url) as string, null, true);
             }
 
             throw new ArgumentException(string.Format("The request method {0} is not supported.", LoaderArguments.Method.ToString().ToUpper()));
@@ -81,7 +81,7 @@ namespace Handlr.Framework.Routing.Steps
                     select new
                     {
                         Key = h.Key,
-                        Value = ParseValue(h.Value)
+                        Value = ParseValue(h.Value) as string
                     }
                 ).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
             using (var db = GetConnector())
