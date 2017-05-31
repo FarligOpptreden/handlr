@@ -88,22 +88,39 @@ namespace Handlr.Framework.Routing.Steps
         /// </summary>
         /// <param name="value">The value to parse</param>
         /// <returns>The parsed value with all structs replaced with their evaluated values</returns>
-        protected string ParseValue(string value)
+        protected object ParseValue(string value)
         {
             foreach (Match match in Regex.Matches(value, "{.[^{}]+}", RegexOptions.IgnoreCase))
             {
                 string matchValue = match.Value;
+                object parsedValue = null;
                 // Parse Step code blocks
-                while (TryParseStepBlock(matchValue, out matchValue)) { }
+                while (TryParseStepBlock(matchValue, out parsedValue))
+                {
+                    if (!parsedValue.IsPrimitive())
+                        return parsedValue;
+                    matchValue = parsedValue.ToString();
+                }
                 value = value.Replace(match.Value, matchValue);
                 // Parse Config code blocks
-                while (TryParseConfigBlock(matchValue, out matchValue)) { }
+                while (TryParseConfigBlock(matchValue, out parsedValue))
+                {
+                    matchValue = parsedValue.ToString();
+                }
                 value = value.Replace(match.Value, matchValue);
                 // Parse field value code blocks
-                while (TryParseFieldValue(matchValue, out matchValue)) { }
+                while (TryParseFieldValue(matchValue, out parsedValue))
+                {
+                    if (!parsedValue.IsPrimitive())
+                        return parsedValue;
+                    matchValue = parsedValue.ToString();
+                }
                 value = value.Replace(match.Value, matchValue);
                 // Parse Decrypt code blocks
-                while (TryParseDecryptBlock(matchValue, out matchValue)) { }
+                while (TryParseDecryptBlock(matchValue, out parsedValue))
+                {
+                    matchValue = parsedValue.ToString();
+                }
                 value = value.Replace(match.Value, matchValue);
             }
             value = value.Replace("{", "").Replace("}", "");
@@ -116,7 +133,7 @@ namespace Handlr.Framework.Routing.Steps
         /// <param name="value">The value to test for the code block</param>
         /// <param name="parsedValue">The parsed value with the evaluated code block's value</param>
         /// <returns>A value indicating whether the code block could be found or not</returns>
-        protected bool TryParseDecryptBlock(string value, out string parsedValue)
+        protected bool TryParseDecryptBlock(string value, out object parsedValue)
         {
             var match = Regex.Match(value, "Decrypt(.+)", RegexOptions.IgnoreCase);
             if (match == null || !match.Success)
@@ -142,7 +159,7 @@ namespace Handlr.Framework.Routing.Steps
         /// <param name="value">The value to test for the code block</param>
         /// <param name="parsedValue">The parsed value with the evaluated code block's value</param>
         /// <returns>A value indicating whether the code block could be found or not</returns>
-        protected bool TryParseConfigBlock(string value, out string parsedValue)
+        protected bool TryParseConfigBlock(string value, out object parsedValue)
         {
             var match = Regex.Match(value, "Config\\." + MEMBER_REGEX, RegexOptions.IgnoreCase);
             if (match == null || !match.Success)
@@ -175,6 +192,7 @@ namespace Handlr.Framework.Routing.Steps
                 default:
                     throw new ParserException(string.Format("The configuration property \"{0}\" could not be parsed.", prop));
             }
+            parsedValue = parsedValue.ToString();
             return true;
         }
 
@@ -184,7 +202,7 @@ namespace Handlr.Framework.Routing.Steps
         /// <param name="value">The value to test for the code block</param>
         /// <param name="parsedValue">The parsed value with the evaluated code block's value</param>
         /// <returns>A value indicating whether the code block could be found or not</returns>
-        protected bool TryParseStepBlock(string value, out string parsedValue)
+        protected bool TryParseStepBlock(string value, out object parsedValue)
         {
             var match = Regex.Match(value, "Step\\." + MEMBER_REGEX, RegexOptions.IgnoreCase);
             if (match == null || !match.Success)
@@ -193,7 +211,9 @@ namespace Handlr.Framework.Routing.Steps
                 return false;
             }
             string[] parts = match.Value.Split('.');
-            parsedValue = value.Replace(match.Value, Utilities.GetDataMember(parts, this).ToString());
+            parsedValue = Utilities.GetDataMember(parts, this);
+            if (parsedValue.IsPrimitive())
+                parsedValue = value.Replace(match.Value, parsedValue.ToString());
             return true;
         }
 
@@ -285,7 +305,7 @@ namespace Handlr.Framework.Routing.Steps
         /// <param name="value">The value to test for the code block</param>
         /// <param name="parsedValue">The parsed value with the evaluated code block's value</param>
         /// <returns>A value indicating whether the code block could be found or not</returns>
-        protected bool TryParseFieldValue(string value, out string parsedValue)
+        protected bool TryParseFieldValue(string value, out object parsedValue)
         {
             var match = Regex.Match(value, "Fields\\." + MEMBER_REGEX, RegexOptions.IgnoreCase);
             if (match == null || !match.Success)
@@ -293,14 +313,10 @@ namespace Handlr.Framework.Routing.Steps
                 parsedValue = value;
                 return false;
             }
-            string valueToCheck = value.Substring(1, value.Length - 2);
-            if (!FieldCache.Exists(valueToCheck))
-            {
-                parsedValue = "";
-                return false;
-            }
             string[] parts = match.Value.Split('.');
-            parsedValue = value.Replace(match.Value, Utilities.GetDataMember(parts, FieldCache).ToString());
+            parsedValue = Utilities.GetDataMember(parts, FieldCache);
+            if (parsedValue.IsPrimitive())
+                parsedValue = value.Replace(match.Value, parsedValue.ToString());
             return true;
         }
     }

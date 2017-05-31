@@ -41,7 +41,9 @@ namespace Handlr.Framework.Routing.Loaders
             Type =
                 (
                     from assembly in AppDomain.CurrentDomain.GetAssemblies()
-                    select assembly.GetType(typeNode.Value)
+                    let type = assembly.GetType(typeNode.Value)
+                    where type != null
+                    select type
                 ).FirstOrDefault();
             var constructorArgsNode = configuration.XPathSelectElement("./ConstructorArguments");
             if (constructorArgsNode != null)
@@ -67,7 +69,6 @@ namespace Handlr.Framework.Routing.Loaders
                 throw new ParserException("The \"Output\" element for the CLR call configuration was not specified");
 
             OutputKey = outputNode.Attribute("key").Value;
-
         }
     }
 }

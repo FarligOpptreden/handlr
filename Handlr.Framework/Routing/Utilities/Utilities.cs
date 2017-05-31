@@ -114,12 +114,16 @@ namespace Handlr.Framework.Routing
                     if (dataMember is Dictionary<string, object>)
                     {
                         // The data member is a dictionary, so cast it accordingly to grab it
+                        if (!(dataMember as Dictionary<string, object>).ContainsKey(part))
+                            continue;
                         dataMember = (dataMember as Dictionary<string, object>)[part];
                         continue;
                     }
                     // The data member is not a dictionary, so use reflection to grab it
                     var memberType = dataMember.GetType();
                     var property = memberType.GetProperty(part, BindingFlags.Public | BindingFlags.Instance);
+                    if (property == null)
+                        continue;
                     dataMember = property.GetValue(dataMember);
                 }
                 catch (Exception ex)

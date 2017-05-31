@@ -32,9 +32,9 @@ namespace Handlr.Framework.Routing.Steps
             if (fieldCache == null)
                 throw new ArgumentNullException("fieldCache");
 
-            using (var db = Core.Factory<Ado>(ParseValue(LoaderArguments.ConnectionString), null, false, "", true))
+            using (var db = Core.Factory<Ado>(ParseValue(LoaderArguments.ConnectionString) as string, null, false, "", true))
             {
-                var results = db.ExecuteReader(ParseValue(LoaderArguments.Query), DeriveParameters());
+                var results = db.ExecuteReader(ParseValue(LoaderArguments.Query) as string, DeriveParameters());
                 try
                 {
                     IFieldCache updatedCache = LoaderArguments.OutputTranslation.Translate(new DataTableCache(results));
