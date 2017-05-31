@@ -1,5 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <!-- ///// Element: Argument ///// -->
+  <xs:element name="Argument">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension  base="xs:string">
+          <xs:attribute name="type" use="required" type="xs:string" />
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
   <!-- ///// Group: Steps ///// -->
   <xs:group name="steps">
     <xs:choice>
@@ -179,6 +189,59 @@
               </xs:restriction>
             </xs:simpleType>
           </xs:attribute>
+        </xs:complexType>
+      </xs:element>
+      <!-- ///// Element: ClrCall ///// -->
+      <xs:element name="ClrCall">
+        <xs:complexType>
+          <xs:sequence>
+            <!-- ///// Element: Type ///// -->
+            <xs:element name="Type" minOccurs="1" maxOccurs="1" type="xs:string" />
+            <!-- ///// Element: ConstructorArguments ///// -->
+            <xs:element name="ConstructorArguments" minOccurs="0" maxOccurs="1">
+              <xs:complexType>
+                <xs:choice>
+                  <!-- ///// Element: Argument ///// -->
+                  <xs:element ref="Argument" minOccurs="1" maxOccurs="unbounded" />
+                </xs:choice>
+              </xs:complexType>
+            </xs:element>
+            <!-- ///// Element: Method ///// -->
+            <xs:element name="Method" minOccurs="1" maxOccurs="1" type="xs:string" />
+            <!-- ///// Element: MethodArguments ///// -->
+            <xs:element name="MethodArguments" minOccurs="0" maxOccurs="1">
+              <xs:complexType>
+                <xs:choice>
+                  <!-- ///// Element: Argument ///// -->
+                  <xs:element ref="Argument" minOccurs="1" maxOccurs="unbounded" />
+                </xs:choice>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+          <!-- ///// Attributes: ClrCall ///// -->
+          <xs:attribute name="type" use="required">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="Handlr.Framework.Routing.Steps.ClrCall" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
+      <!-- ///// Element: XsltTransform ///// -->
+      <xs:element name="XsltTransform">
+        <xs:complexType>
+          <!-- ///// Attributes: XsltTransform ///// -->
+          <xs:attribute name="type" use="required">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="Handlr.Framework.Routing.Steps.XsltTransform" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="path" use="required" type="xs:string" />
+          <xs:attribute name="inputKey" use="required" type="xs:string" />
+          <xs:attribute name="outputKey" use="required" type="xs:string" />
         </xs:complexType>
       </xs:element>
       <!-- ///// Element: Condition ///// -->
