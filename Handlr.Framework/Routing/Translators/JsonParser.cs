@@ -55,7 +55,7 @@ namespace Handlr.Framework.Routing.Translators
                 throw new ParserException(string.Format("The foreach() expression is not formatted properly. Make sure it is in the format foreach(@element in @data do [template body])."));
 
             string elementName = match.Groups[1].Value;
-            string dataName = match.Groups[2].Value;
+            string dataName = match.Groups[2].Value.Substring(1);
             object dataMember = Utilities.GetDataMember(dataName.Split('.'), inputData);
             string template = match.Groups[3].Value;
             string parsedTemplate = _ListPre;
@@ -90,7 +90,7 @@ namespace Handlr.Framework.Routing.Translators
         /// <returns></returns>
         protected override bool TryParseDataMembers(string value, IFieldCache inputData, out string parsedValue)
         {
-            var matches = Regex.Matches(value, "@input(\\.[a-zA-Z0-9\\-_]+)*", RegexOptions.IgnoreCase);
+            var matches = Regex.Matches(value, "[\\s\\t\\n]+@([a-zA-Z0-9\\-_\\[\\]]+\\.?)*", RegexOptions.IgnoreCase);
             if (matches == null || matches.Count == 0)
             {
                 parsedValue = value;
@@ -98,8 +98,12 @@ namespace Handlr.Framework.Routing.Translators
             }
             foreach (Match fieldMatch in matches)
             {
-                object elementMember = Utilities.GetDataMember(fieldMatch.Value.Split('.'), inputData);
-                string replaceMatch = fieldMatch.Value.Replace(".", "\\.") + _FieldTermination;
+                object elementMember = null;
+                if (fieldMatch.Value.Trim().ToLower() == "@input")
+                    elementMember = inputData;
+                else
+                    elementMember = Utilities.GetDataMember(fieldMatch.Value.Trim().Substring(1).Split('.'), inputData);
+                string replaceMatch = fieldMatch.Value.Replace(".", "\\.").Replace("]", "\\]").Replace("[", "\\[") + _FieldTermination;
                 value = Regex.Replace(value, replaceMatch, elementMember.ToJson(), RegexOptions.IgnoreCase);
             }
             parsedValue = value;

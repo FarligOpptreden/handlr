@@ -28,7 +28,7 @@ namespace Handlr.Framework.Routing.Translators
                 throw new ParserException("The input string could not be parsed to Xml: " + ex.Message);
             }
             var cache = new GenericFieldCache();
-            var parsedTemplate = LoadAndParseTemplate(new GenericFieldCache((input as XmlFieldCache).ToDictionary()));
+            var parsedTemplate = LoadAndParseTemplate(new GenericFieldCache((input as XmlFieldCache).ToDictionary()["xml"].ToDictionary()));
             cache.Add(parsedTemplate.Root.Name.LocalName, parsedTemplate.Root.XPathSelectElement("./*").ToString());
             return cache;
         }

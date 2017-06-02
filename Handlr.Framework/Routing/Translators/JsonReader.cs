@@ -27,7 +27,7 @@ namespace Handlr.Framework.Routing.Translators
                 throw new ParserException("The input string could not be parsed to JSON: " + ex.Message);
             }
             var cache = new GenericFieldCache();
-            cache.AddRange(LoadAndParseTemplate(new GenericFieldCache((input as JsonFieldCache).ToDictionary())));
+            cache.AddRange(LoadAndParseTemplate(new GenericFieldCache((input as JsonFieldCache).ToDictionary()["json"].ToDictionary())));
             return cache;
         }
     }

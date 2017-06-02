@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Handlr.Framework.Routing.Interfaces;
 using Handlr.Framework.Routing.Exceptions;
+using System.Linq;
 
 namespace Handlr.Framework.Routing.Steps
 {
@@ -313,10 +314,10 @@ namespace Handlr.Framework.Routing.Steps
                 parsedValue = value;
                 return false;
             }
-            string[] parts = match.Value.Split('.');
+            string[] parts = match.Value.Split('.').Skip(1).ToArray();
             parsedValue = Utilities.GetDataMember(parts, FieldCache);
-            if (parsedValue.IsPrimitive())
-                parsedValue = value.Replace(match.Value, parsedValue.ToString());
+            if (parsedValue == null || parsedValue.GetType().IsPrimitive())
+                parsedValue = value.Replace(match.Value, parsedValue == null ? "" : parsedValue.ToString());
             return true;
         }
     }

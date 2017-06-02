@@ -44,6 +44,22 @@ namespace Handlr.Framework.Routing
             return Cryptography.Decrypt(cipherText, _Config.PassPhrase);
         }
 
+        private static object GetIndexedProperty(object dataMember, int indexer)
+        {
+            var memberType = dataMember.GetType();
+            // Assume the data member is an array or list, so search for the indexer property and use it to grab the indexed object
+            PropertyInfo indexProp = null;
+            foreach (var prop in memberType.GetProperties(BindingFlags.Instance | BindingFlags.Public))
+            {
+                if (prop.GetIndexParameters().Length > 0)
+                {
+                    indexProp = prop;
+                    break;
+                }
+            }
+            return indexProp.GetValue(dataMember, new object[] { indexer });
+        }
+
         /// <summary>
         /// Gets a data member based on the member path.
         /// </summary>
@@ -57,6 +73,9 @@ namespace Handlr.Framework.Routing
 
             for (int i = 0; i < pathParts.Length; i++)
             {
+                if (dataMember == null)
+                    return dataMember;
+
                 string part = pathParts[i];
 
                 // If the current part starts with "@" (i.e. "@input") continue to the next part, as this assumes
@@ -81,25 +100,14 @@ namespace Handlr.Framework.Routing
                         {
                             // The data member is a dictionary, so cast it accordingly to grab the indexed object
                             dataMember = (dataMember as Dictionary<string, object>)[propertyString];
-                            dataMember = (dataMember as List<object>)[indexer];
+                            dataMember = GetIndexedProperty(dataMember, indexer);
                             continue;
                         }
                         // The data member is not a dictionary, so use reflection to get to the indexed object
                         var memberType = dataMember.GetType();
                         var property = memberType.GetProperty(propertyString, BindingFlags.Public | BindingFlags.Instance);
                         dataMember = property.GetValue(dataMember);
-                        memberType = dataMember.GetType();
-                        // Assume the data member is an array or list, so search for the indexer property and use it to grab the indexed object
-                        PropertyInfo indexProp = null;
-                        foreach (var prop in memberType.GetProperties(BindingFlags.Instance | BindingFlags.Public))
-                        {
-                            if (prop.GetIndexParameters().Length > 0)
-                            {
-                                indexProp = prop;
-                                break;
-                            }
-                        }
-                        dataMember = indexProp.GetValue(dataMember, new object[] { indexer });
+                        dataMember = GetIndexedProperty(dataMember, indexer);
                     }
                     catch
                     {
@@ -115,7 +123,10 @@ namespace Handlr.Framework.Routing
                     {
                         // The data member is a dictionary, so cast it accordingly to grab it
                         if (!(dataMember as Dictionary<string, object>).ContainsKey(part))
+                        {
+                            dataMember = null;
                             continue;
+                        }
                         dataMember = (dataMember as Dictionary<string, object>)[part];
                         continue;
                     }

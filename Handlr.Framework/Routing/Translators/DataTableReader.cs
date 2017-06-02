@@ -1,5 +1,4 @@
-﻿using System;
-using Handlr.Framework.Routing.Interfaces;
+﻿using Handlr.Framework.Routing.Interfaces;
 using Handlr.Framework.Routing.Types;
 
 namespace Handlr.Framework.Routing.Translators
