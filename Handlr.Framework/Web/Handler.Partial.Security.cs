@@ -6,14 +6,14 @@ namespace Handlr.Framework.Web
 {
     public abstract partial class Handler : IController
     {
-        public virtual User User()
+        public virtual IUser User()
         {
             return GetCookieObject<User>("H:U");
         }
 
         public virtual string GetUserId()
         {
-            return User().ID.ToString();
+            return User().GetIdentifier();
         }
 
         public virtual bool IsAuthenticated()
@@ -54,7 +54,7 @@ namespace Handlr.Framework.Web
                 Redirect(Configuration.Accounts.Url + "/" + AppId.Value.ToString() + "/sign-out");
         }
 
-        Config IController.Configuration()
+        IConfig IController.Configuration()
         {
             return Configuration;
         }

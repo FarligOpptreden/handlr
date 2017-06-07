@@ -77,7 +77,7 @@ namespace Handlr.Framework.Data.Http
             string result = ExecuteReader(query, inputParameters, null, false, commandTimeout) as string;
             if (!string.IsNullOrEmpty(result))
             {
-                T obj = result.To<T>();
+                T obj = result.ToObject<T>();
                 if (obj != null && obj is IEnumerable<T>)
                     return obj as IEnumerable<T>;
                 if (obj != null && obj is T)

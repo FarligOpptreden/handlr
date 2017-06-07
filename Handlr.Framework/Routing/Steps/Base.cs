@@ -102,13 +102,13 @@ namespace Handlr.Framework.Routing.Steps
                         return parsedValue;
                     matchValue = parsedValue.ToString();
                 }
-                value = value.Replace(match.Value, matchValue);
+                //value = value.Replace(match.Value, matchValue);
                 // Parse Config code blocks
                 while (TryParseConfigBlock(matchValue, out parsedValue))
                 {
                     matchValue = parsedValue.ToString();
                 }
-                value = value.Replace(match.Value, matchValue);
+                //value = value.Replace(match.Value, matchValue);
                 // Parse field value code blocks
                 while (TryParseFieldValue(matchValue, out parsedValue))
                 {
@@ -116,7 +116,7 @@ namespace Handlr.Framework.Routing.Steps
                         return parsedValue;
                     matchValue = parsedValue.ToString();
                 }
-                value = value.Replace(match.Value, matchValue);
+                //value = value.Replace(match.Value, matchValue);
                 // Parse Decrypt code blocks
                 while (TryParseDecryptBlock(matchValue, out parsedValue))
                 {
@@ -144,7 +144,7 @@ namespace Handlr.Framework.Routing.Steps
             }
             try
             {
-                string partToDecrypt = Utilities.DecryptString(match.Value.Substring(7, match.Value.Length - 9));
+                string partToDecrypt = Utilities.DecryptString(match.Value.Substring(8, match.Value.Length - 10));
                 parsedValue = value.Replace(match.Value, partToDecrypt);
             }
             catch (Exception ex)

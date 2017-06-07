@@ -3,6 +3,7 @@ using Handlr.Framework.Routing.Exceptions;
 using Handlr.Framework.Routing.Types;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
+using System.Collections;
 
 namespace Handlr.Framework.Routing.Translators
 {
@@ -60,10 +61,10 @@ namespace Handlr.Framework.Routing.Translators
             string template = match.Groups[3].Value;
             string parsedTemplate = _ListPre;
 
-            if (!(dataMember is List<object>))
+            if (!typeof(IEnumerable).IsAssignableFrom(dataMember.GetType()))
                 throw new ParserException(string.Format("The data member being accessed for the foreach({0} in {1} do [template]) expression is not a valid list.", elementName, dataName));
 
-            foreach (var element in dataMember as List<object>)
+            foreach (var element in dataMember as IEnumerable)
             {
                 string elementTemplate = template;
                 if (element is Dictionary<string, object>)

@@ -4,10 +4,8 @@ using System;
 
 namespace Handlr.Framework.Web.Types
 {
-    public class User
+    public class User : Interfaces.IUser
     {
-        public User() { }
-
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public Guid ID { get; set; }
 
@@ -33,5 +31,12 @@ namespace Handlr.Framework.Web.Types
         [MapsTo("Provider_*")]
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public Provider Provider { get; set; }
+
+        public User() { }
+
+        public string GetIdentifier()
+        {
+            return ID.ToString();
+        }
     }
 }

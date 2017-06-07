@@ -4,7 +4,7 @@ using System.Xml.Linq;
 
 namespace Handlr.Framework.Web
 {
-    public class Config
+    public class Config : Interfaces.IConfig
     {
         public Config(XDocument config)
         {

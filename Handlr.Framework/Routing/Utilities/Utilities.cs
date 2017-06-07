@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Handlr.Framework.Routing.Exceptions;
-using Handlr.Framework.Routing.Interfaces;
 using Handlr.Framework.Web.Interfaces;
 using System.Reflection;
 
@@ -12,13 +11,13 @@ namespace Handlr.Framework.Routing
         /// <summary>
         /// A collection of useful functions to be shared across projects.
         /// </summary>
-        private static IConfig _Config;
+        private static Interfaces.IConfig _Config;
 
         /// <summary>
         /// Sets the current configuration.
         /// </summary>
         /// <param name="config">The configuration to set.</param>
-        public static void Configure(IConfig config)
+        public static void Configure(Interfaces.IConfig config)
         {
             _Config = config;
         }
