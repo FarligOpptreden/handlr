@@ -1,6 +1,7 @@
 ﻿using Handlr.Framework.Routing.Interfaces;
 using System.Collections.Generic;
 using System;
+using Newtonsoft.Json;
 
 namespace Handlr.Framework.Routing.Types
 {
@@ -11,7 +12,8 @@ namespace Handlr.Framework.Routing.Types
     {
         public JsonFieldCache(string json)
         {
-            Add("json", json.ToDictionary());
+            var converted = JsonConvert.DeserializeObject(json);
+            Add("json", converted is string ? converted : json.ToDictionary());
         }
 
         /// <summary>

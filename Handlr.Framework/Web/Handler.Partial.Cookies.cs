@@ -16,7 +16,7 @@ namespace Handlr.Framework.Web
         /// <typeparam name="T">The type to deserialize the cookie to</typeparam>
         /// <param name="key">The key of the cookie to decrypt and deserialize</param>
         /// <returns>An object representing the decrypted and deserialized cookie</returns>
-        protected virtual T GetCookieObject<T>(string key)
+        public virtual T GetCookieObject<T>(string key)
         {
             string value = null;
             if (string.IsNullOrEmpty(key))
@@ -58,7 +58,7 @@ namespace Handlr.Framework.Web
         /// <param name="key">The key of the cookie to create or update</param>
         /// <param name="obj">The object to serialize and encrypt</param>
         /// <param name="expires">A date on which the cookie expires, but cookies default to session only</param>
-        protected virtual void SetCookieObject<T>(string key, T obj, DateTime? expires = null)
+        public virtual void SetCookieObject<T>(string key, T obj, DateTime? expires = null)
         {
             if (obj != null)
             {

@@ -134,7 +134,7 @@ namespace Handlr.Framework.Routing.Process
             if (output.Success)
             {
                 var translatedCache = OutputTranslation != null ? OutputTranslation.Translate(fieldCache) : fieldCache;
-                output.SetData((!string.IsNullOrEmpty(OutputData) ? translatedCache[OutputData] : translatedCache));
+                output.SetData((!string.IsNullOrEmpty(OutputData) ? translatedCache[OutputData] : translatedCache), fieldCache);
             }
             return output;
         }

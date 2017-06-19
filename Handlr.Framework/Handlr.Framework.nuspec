@@ -16,7 +16,7 @@
       <dependency id="Microsoft.AspNet.Razor" version="3.2.3" />
       <dependency id="Microsoft.AspNet.WebPages" version="3.2.3" />
       <dependency id="Microsoft.Web.Infrastructure" version="1.0.0.0" />
-      <dependency id="Newtonsoft.Json" version="8.0.3"/>
+      <dependency id="Newtonsoft.Json" version="10.0.2"/>
     </dependencies>
   </metadata>
 </package>

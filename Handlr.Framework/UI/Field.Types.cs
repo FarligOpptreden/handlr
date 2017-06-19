@@ -143,6 +143,28 @@ namespace Handlr.Framework.UI
         }
 
         /// <summary>
+        /// Represents the events for a list field.
+        /// </summary>
+        public class ListEvents : Events
+        {
+            /// <summary>
+            /// Gets or sets the @onclick of the field.
+            /// </summary>
+            public string OnClick { get; set; }
+        }
+
+        /// <summary>
+        /// Represents the events for a range field.
+        /// </summary>
+        public class RangeEvents : Events
+        {
+            /// <summary>
+            /// Gets or sets the @onformat of the field.
+            /// </summary>
+            public string OnFormat { get; set; }
+        }
+
+        /// <summary>
         /// Represents the events used when data-binding an autocomplete field.
         /// </summary>
         public class DataBindingEvents

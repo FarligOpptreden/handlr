@@ -32,7 +32,7 @@ namespace Handlr.Framework.Routing.Translators
             if (loaderArgs == null)
                 throw new ArgumentNullException("loaderArgs");
 
-            Load(loaderArgs);
+            Load((L)(ILoaderArguments)loaderArgs);
         }
 
         /// <summary>

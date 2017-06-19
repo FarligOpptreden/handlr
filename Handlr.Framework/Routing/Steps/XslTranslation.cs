@@ -8,14 +8,14 @@ namespace Handlr.Framework.Routing.Steps
     /// <summary>
     /// Represents a step that transforms a given Xml structure with a specific Xml Stylesheet
     /// </summary>
-    [Tag("Transform")]
-    public class XsltTransform : Transform
+    [Tag("Translate")]
+    public class XslTranslation : Translate
     {
         /// <summary>
         /// Creates a new XsltTransform instance.
         /// </summary>
         /// <param name="executionContext">The current execution context of the step</param>
-        public XsltTransform(IController executionContext) : base(executionContext) { }
+        public XslTranslation(IController executionContext) : base(executionContext) { }
 
         /// <summary>
         /// Performs the transformation of the XML
@@ -29,7 +29,7 @@ namespace Handlr.Framework.Routing.Steps
             if (fieldCache == null)
                 throw new ArgumentNullException("fieldCache");
 
-            var result = new Translators.XsltTransformer().Translate(fieldCache);
+            var result = new Translators.XslTranslator().Translate(fieldCache);
             return fieldCache;
         }
     }

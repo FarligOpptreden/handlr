@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Handlr.Framework.Routing.Interfaces;
+using System.Dynamic;
+using System.Collections;
 
 namespace Handlr.Framework.Routing.Types
 {

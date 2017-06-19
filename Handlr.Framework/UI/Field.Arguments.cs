@@ -83,7 +83,34 @@ namespace Handlr.Framework.UI
         /// <summary>
         /// Represents the arguments of a number field.
         /// </summary>
-        public class NumberArguments : InputArguments { }
+        public class NumberArguments : InputArguments
+        {
+            /// <summary>
+            /// Gets or sets the minimum allowed value of the field.
+            /// </summary>
+            public decimal? Min { get; set; }
+
+            /// <summary>
+            /// Gets or sets the maximum allowed value of the field.
+            /// </summary>
+            public decimal? Max { get; set; }
+        }
+
+        /// <summary>
+        /// Represents the arguments of a range field.
+        /// </summary>
+        public class RangeArguments : NumberArguments
+        {
+            /// <summary>
+            /// Gets or sets the increment or decrement for each step.
+            /// </summary>
+            public decimal? Step { get; set; }
+
+            /// <summary>
+            /// Gets or sets all the events of the field.
+            /// </summary>
+            public new RangeEvents Events { get; set; }
+        }
 
         /// <summary>
         /// Represents the arguments of a checkbox field.
@@ -115,6 +142,18 @@ namespace Handlr.Framework.UI
             /// Gets or sets the items to display in the list.
             /// </summary>
             public List<ListItem> Items { get; set; } = new List<ListItem>();
+
+            /// <summary>
+            /// Gets or sets all the events of the field.
+            /// </summary>
+            public new ListEvents Events { get; set; }
+        }
+
+        /// <summary>
+        /// Represents the arguments for a radio-button field.
+        /// </summary>
+        public class RadioArguments : ListArguments
+        {
         }
 
         /// <summary>
@@ -136,6 +175,11 @@ namespace Handlr.Framework.UI
             /// Gets or sets the data binding.
             /// </summary>
             public DataBinding DataBinding { get; set; }
+
+            /// <summary>
+            /// Gets or sets all the events of the field.
+            /// </summary>
+            public new ListEvents Events { get; set; }
         }
     }
 }

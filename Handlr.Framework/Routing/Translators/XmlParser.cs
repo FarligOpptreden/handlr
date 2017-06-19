@@ -45,7 +45,7 @@ namespace Handlr.Framework.Routing.Translators
         /// <returns></returns>
         protected override bool TryParseForLoop(string value, IFieldCache inputData, out string parsedValue)
         {
-            var match = Regex.Match(value, "foreach\\s?\\((@[a-zA-Z0-9]+)\\s+in\\s+(@[a-zA-Z0-9\\.]+)\\s+do\\s+([[a-zA-Z0-9\\s!@#$%^&*(),{}\"':_=+\\.\\-\\[\\]\r\\n\\s\\t]*)\\)", RegexOptions.IgnoreCase);
+            var match = Regex.Match(value, "foreach\\s?\\((@[a-zA-Z0-9]+)\\s+in\\s+(@[a-zA-Z0-9\\.]+)\\s+do\\s+([[a-zA-Z0-9\\s!@#%^&*(),{}\"':_=+\\.\\-\\[\\]\r\\n\\s\\t]*)\\)\\$", RegexOptions.IgnoreCase);
             if (match == null || !match.Success)
             {
                 parsedValue = value;

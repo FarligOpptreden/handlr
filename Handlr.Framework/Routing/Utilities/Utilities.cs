@@ -112,7 +112,6 @@ namespace Handlr.Framework.Routing
                     {
                         throw new ParserException(string.Format("Could not access the indexed property \"{0}\" on the member \"{1}\".", indexer, pathParts));
                     }
-
                     continue;
                 }
                 try

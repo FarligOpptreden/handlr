@@ -176,6 +176,8 @@ namespace Handlr.Framework.Web
                     if (!isAuthenticated && AppId.HasValue && AppId != Guid.Empty && !string.IsNullOrEmpty(SecuriUrl))
                     {
                         // Redirect to the accounts management page (sign in page) and break out of the controller.
+                        if (context.ResponseType != ContentType.Html)
+                            throw new WebException(Status.Forbidden, "Unauthorized");
                         RedirectToAccountsManagement(s);
                         return;
                     }

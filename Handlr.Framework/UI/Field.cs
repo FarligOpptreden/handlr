@@ -44,7 +44,7 @@ namespace Handlr.Framework.UI
         public static IHtmlString Number(NumberArguments args)
         {
             return new HtmlString(string.Format(
-                "<h-field type=\"number\" id=\"{0}\" label=\"{1}\" value=\"{2}\" placeholder=\"{3}\" {4} {5} class=\"{6}\" onchange=\"{7}\" onblur=\"{8}\" onfocus=\"{9}\" onrender=\"{10}\">{11}</h-field>",
+                "<h-field type=\"number\" id=\"{0}\" label=\"{1}\" value=\"{2}\" min=\"{12}\" max=\"{13}\" placeholder=\"{3}\" {4} {5} class=\"{6}\" onchange=\"{7}\" onblur=\"{8}\" onfocus=\"{9}\" onrender=\"{10}\">{11}</h-field>",
                 args.Id,
                 args.Label,
                 args.Value,
@@ -56,7 +56,37 @@ namespace Handlr.Framework.UI
                 args.Events != null ? args.Events.OnBlur : null,
                 args.Events != null ? args.Events.OnFocus : null,
                 args.Events != null ? args.Events.OnRender : null,
-                RenderValidation(args.Validations)
+                RenderValidation(args.Validations),
+                args.Min.HasValue ? args.Min.Value.ToString() : "",
+                args.Max.HasValue ? args.Max.Value.ToString() : ""
+                ));
+        }
+
+        /// <summary>
+        /// Renders a sliding range field.
+        /// </summary>
+        /// <param name="args">The arguments used to specify all the field attributes</param>
+        /// <returns>A formatted representation of a sliding range field</returns>
+        public static IHtmlString Range(RangeArguments args)
+        {
+            return new HtmlString(string.Format(
+                "<h-field type=\"range\" id=\"{0}\" label=\"{1}\" value=\"{2}\" min=\"{12}\" max=\"{13}\" step=\"{14}\" placeholder=\"{3}\" {4} {5} class=\"{6}\" onchange=\"{7}\" onblur=\"{8}\" onfocus=\"{9}\" onrender=\"{10}\" onformat=\"{15}\">{11}</h-field>",
+                args.Id,
+                args.Label,
+                args.Value,
+                args.Placeholder,
+                args.Readonly ? "readonly" : "",
+                args.Disabled ? "disabled" : "",
+                args.Classes,
+                args.Events != null ? args.Events.OnChange : null,
+                args.Events != null ? args.Events.OnBlur : null,
+                args.Events != null ? args.Events.OnFocus : null,
+                args.Events != null ? args.Events.OnRender : null,
+                RenderValidation(args.Validations),
+                args.Min.HasValue ? args.Min.Value.ToString() : "",
+                args.Max.HasValue ? args.Max.Value.ToString() : "",
+                args.Step.HasValue ? args.Step.Value.ToString() : "",
+                args.Events != null ? args.Events.OnFormat : null
                 ));
         }
 
@@ -124,7 +154,7 @@ namespace Handlr.Framework.UI
                 items.Append("</items>");
 
             return new HtmlString(string.Format(
-                "<h-field type=\"list\" id=\"{0}\" label=\"{1}\" value=\"{2}\" placeholder=\"{12}\" {3} {4} class=\"{5}\" onchange=\"{6}\" onblur=\"{7}\" onfocus=\"{8}\" onrender=\"{9}\">{10}{11}</h-field>",
+                "<h-field type=\"list\" id=\"{0}\" label=\"{1}\" value=\"{2}\" placeholder=\"{13}\" {3} {4} class=\"{5}\" onchange=\"{6}\" onblur=\"{7}\" onfocus=\"{8}\" onrender=\"{9}\" onclick=\"{10}\">{11}{12}</h-field>",
                 args.Id,
                 args.Label,
                 args.Value,
@@ -135,6 +165,7 @@ namespace Handlr.Framework.UI
                 args.Events != null ? args.Events.OnBlur : null,
                 args.Events != null ? args.Events.OnFocus : null,
                 args.Events != null ? args.Events.OnRender : null,
+                args.Events != null ? args.Events.OnClick : null,
                 items.ToString(),
                 RenderValidation(args.Validations),
                 args.Placeholder
@@ -169,7 +200,7 @@ namespace Handlr.Framework.UI
                 template = string.Format("<template class=\"{0}\">{1}</template>", args.Template.Classes, args.Template.Content);
 
             return new HtmlString(string.Format(
-                "<h-field type=\"list\" id=\"{0}\" label=\"{1}\" value=\"{2}\" placeholder=\"{14}\" {3} {4} class=\"{5}\" onchange=\"{6}\" onblur=\"{7}\" onfocus=\"{8}\" onrender=\"{9}\">{10}{11}{12}{13}</h-field>",
+                "<h-field type=\"list\" id=\"{0}\" label=\"{1}\" value=\"{2}\" placeholder=\"{15}\" {3} {4} class=\"{5}\" onchange=\"{6}\" onblur=\"{7}\" onfocus=\"{8}\" onrender=\"{9}\" onclick=\"{10}\">{11}{12}{13}{14}</h-field>",
                 args.Id,
                 args.Label,
                 args.Value,
@@ -180,9 +211,44 @@ namespace Handlr.Framework.UI
                 args.Events != null ? args.Events.OnBlur : null,
                 args.Events != null ? args.Events.OnFocus : null,
                 args.Events != null ? args.Events.OnRender : null,
+                args.Events != null ? args.Events.OnClick : null,
                 valueBinding,
                 dataBinding,
                 template,
+                RenderValidation(args.Validations),
+                args.Placeholder
+                ));
+        }
+        
+        /// <summary>
+         /// Renders a radio-button field.
+         /// </summary>
+         /// <param name="args">The arguments used to specify all the field attributes</param>
+         /// <returns>A formatted representation of a number field</returns>
+        public static IHtmlString Radio(RadioArguments args)
+        {
+            StringBuilder items = new StringBuilder();
+            if (args.Items != null && args.Items.Count > 0)
+                items.Append("<items>");
+            foreach (var item in args.Items)
+                items.Append(string.Format("<item value=\"{0}\" display=\"{1}\" />", item.Value, item.Display));
+            if (args.Items != null && args.Items.Count > 0)
+                items.Append("</items>");
+
+            return new HtmlString(string.Format(
+                "<h-field type=\"radio\" id=\"{0}\" label=\"{1}\" value=\"{2}\" placeholder=\"{13}\" {3} {4} class=\"{5}\" onchange=\"{6}\" onblur=\"{7}\" onfocus=\"{8}\" onrender=\"{9}\" onclick=\"{10}\">{11}{12}</h-field>",
+                args.Id,
+                args.Label,
+                args.Value,
+                args.Readonly ? "readonly" : "",
+                args.Disabled ? "disabled" : "",
+                args.Classes,
+                args.Events != null ? args.Events.OnChange : null,
+                args.Events != null ? args.Events.OnBlur : null,
+                args.Events != null ? args.Events.OnFocus : null,
+                args.Events != null ? args.Events.OnRender : null,
+                args.Events != null ? args.Events.OnClick : null,
+                items.ToString(),
                 RenderValidation(args.Validations),
                 args.Placeholder
                 ));
