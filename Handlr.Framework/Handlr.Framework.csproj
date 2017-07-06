@@ -232,7 +232,6 @@
     <None Include="handlr-config.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Handlr.Framework.nuspec" />
     <None Include="packages.config" />
     <None Include="Routing\route-definition.xsd">
       <SubType>Designer</SubType>
@@ -241,8 +240,7 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy /Q /Y "$(TargetPath)" "C:\Work\{type}DEV\Repository"
-if "$(ConfigurationName)" == "Release" "C:\Work\{type}DEV\nuget.exe" pack "$(ProjectPath)" -Prop Configuration=Release</PostBuildEvent>
+    <PostBuildEvent>xcopy /Q /Y "$(TargetPath)" "C:\Work\{type}DEV\Repository"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
