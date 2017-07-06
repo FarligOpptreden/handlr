@@ -7,7 +7,7 @@ namespace Handlr.Framework.Web
 {
     public class ViewRenderer
     {
-        protected ControllerContext Context { get; set; }
+        public ControllerContext Context { get; set; }
 
         public ViewRenderer()
         {

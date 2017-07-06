@@ -47,7 +47,7 @@ namespace Handlr.Framework.Routing.Steps
                     continue;
                 }
                 if (!Regex.IsMatch(cachedField.ToString(), field.Regex, RegexOptions.IgnoreCase | RegexOptions.Multiline))
-                    Exceptions.Add(new RegexValidationException(field.Name, cachedField, ParseValue(field.Regex) as string, ParseValue(field.Message) as string));
+                    Exceptions.Add(new RegexValidationException(field.Name, cachedField, field.Regex, ParseValue(field.Message) as string));
             }
 
             if (Exceptions.Count > 0)

@@ -113,7 +113,9 @@ namespace Handlr.Framework.Routing.Process
 
             // Initialize the process before returning
             var restProcess = new RestProcess();
-            restProcess.Load(factoryArguments.Handler, new Loaders.RestProcessLoaderArguments(Path.Combine(factoryArguments.ModulePath, factoryArguments.ModuleName), factoryArguments.Module, definition.XPathSelectElement("/Definition")));
+            var loaderArgs = new Loaders.RestProcessLoaderArguments(Path.Combine(factoryArguments.ModulePath, factoryArguments.ModuleName), factoryArguments.Module, definition.XPathSelectElement("/Definition"));
+            loaderArgs.FactoryArgs = factoryArguments;
+            restProcess.Load(factoryArguments.Handler, loaderArgs);
 
             return restProcess;
         }

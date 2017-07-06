@@ -82,6 +82,8 @@
                 </xs:restriction>
               </xs:simpleType>
             </xs:element>
+            <!-- ///// Element: Timeout ///// -->
+            <xs:element name="Timeout" minOccurs="0" maxOccurs="1" type="xs:int" />
             <!-- ///// Element: Headers ///// -->
             <xs:element name="Headers" minOccurs="0" maxOccurs="1">
               <xs:complexType>
@@ -96,20 +98,43 @@
                 </xs:choice>
               </xs:complexType>
             </xs:element>
-            <!-- ///// Element: OutputTranslation ///// -->
-            <xs:element name="OutputTranslation" minOccurs="0" maxOccurs="1">
+            <!-- ///// Element: Output ///// -->
+            <xs:element name="Output" minOccurs="0" maxOccurs="1">
               <xs:complexType>
-                <!-- ///// Attributes: OutputTranslation ///// -->
-                <xs:attribute name="type" use="required">
-                  <xs:simpleType>
-                    <xs:restriction base="xs:string">
-                      <xs:enumeration value="Handlr.Framework.Routing.Translators.JsonReader" />
-                      <xs:enumeration value="Handlr.Framework.Routing.Translators.TextReader" />
-                      <xs:enumeration value="Handlr.Framework.Routing.Translators.XmlReader" />
-                    </xs:restriction>
-                  </xs:simpleType>
-                </xs:attribute>
-                <xs:attribute name="path" type="xs:string" use="required" />
+                <xs:sequence>
+                  <xs:choice>
+                    <xs:element name="Translate" minOccurs="1" maxOccurs="1">
+                      <xs:complexType>
+                        <!-- ///// Attributes: Output ///// -->
+                        <xs:attribute name="type" use="required">
+                          <xs:simpleType>
+                            <xs:restriction base="xs:string">
+                              <xs:enumeration value="Handlr.Framework.Routing.Translators.JsonReader" />
+                              <xs:enumeration value="Handlr.Framework.Routing.Translators.TextReader" />
+                              <xs:enumeration value="Handlr.Framework.Routing.Translators.XmlReader" />
+                            </xs:restriction>
+                          </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="path" type="xs:string" use="required" />
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="Cache" minOccurs="1" maxOccurs="1">
+                      <xs:complexType>
+                        <!-- ///// Attributes: Output ///// -->
+                        <xs:attribute name="type" use="required">
+                          <xs:simpleType>
+                            <xs:restriction base="xs:string">
+                              <xs:enumeration value="Handlr.Framework.Routing.Types.JsonFieldCache" />
+                              <xs:enumeration value="Handlr.Framework.Routing.Types.StringFieldCache" />
+                              <xs:enumeration value="Handlr.Framework.Routing.Types.XmlFieldCache" />
+                            </xs:restriction>
+                          </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="key" type="xs:string" use="required" />
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:choice>
+                </xs:sequence>
               </xs:complexType>
             </xs:element>
           </xs:sequence>
@@ -217,6 +242,12 @@
                 </xs:choice>
               </xs:complexType>
             </xs:element>
+            <!-- ///// Element: Output ///// -->
+            <xs:element name="Output" minOccurs="1" maxOccurs="1">
+              <xs:complexType>
+                <xs:attribute name="key" type="xs:string" use="required"/>
+              </xs:complexType>
+            </xs:element>
           </xs:sequence>
           <!-- ///// Attributes: ClrCall ///// -->
           <xs:attribute name="type" use="required">
@@ -228,20 +259,21 @@
           </xs:attribute>
         </xs:complexType>
       </xs:element>
-      <!-- ///// Element: XsltTransform ///// -->
-      <xs:element name="XsltTransform">
+      <!-- ///// Element: Translate ///// -->
+      <xs:element name="Translate">
         <xs:complexType>
-          <!-- ///// Attributes: XsltTransform ///// -->
+          <!-- ///// Attributes: Translate ///// -->
           <xs:attribute name="type" use="required">
             <xs:simpleType>
               <xs:restriction base="xs:string">
-                <xs:enumeration value="Handlr.Framework.Routing.Steps.XsltTransform" />
+                <xs:enumeration value="Handlr.Framework.Routing.Steps.XslTranslation" />
+                <xs:enumeration value="Handlr.Framework.Routing.Steps.JsonTranslation" />
               </xs:restriction>
             </xs:simpleType>
           </xs:attribute>
           <xs:attribute name="path" use="required" type="xs:string" />
-          <xs:attribute name="inputKey" use="required" type="xs:string" />
-          <xs:attribute name="outputKey" use="required" type="xs:string" />
+          <xs:attribute name="inputKey" use="optional" type="xs:string" />
+          <xs:attribute name="outputKey" use="optional" type="xs:string" />
         </xs:complexType>
       </xs:element>
       <!-- ///// Element: Condition ///// -->
@@ -277,30 +309,7 @@
         </xs:element>
         <!-- ///// Group Reference: Steps ///// -->
         <xs:group ref="steps" minOccurs="0" maxOccurs="unbounded" />
-        <xs:choice minOccurs="1" maxOccurs="2">
-          <!-- ///// Element: OutputTranslation ///// -->
-          <xs:element name="OutputTranslation" minOccurs="0" maxOccurs="1">
-            <xs:complexType>
-              <!-- ///// Attributes: OutputTranslation ///// -->
-              <xs:attribute name="type" use="required">
-                <xs:simpleType>
-                  <xs:restriction base="xs:string">
-                    <xs:enumeration value="Handlr.Framework.Routing.Translators.JsonWriter" />
-                    <xs:enumeration value="Handlr.Framework.Routing.Translators.TextWriter" />
-                    <xs:enumeration value="Handlr.Framework.Routing.Translators.XmlWriter" />
-                  </xs:restriction>
-                </xs:simpleType>
-              </xs:attribute>
-              <xs:attribute name="path" type="xs:string" use="required" />
-            </xs:complexType>
-          </xs:element>
-          <!-- ///// Element: RenderView ///// -->
-          <xs:element name="RenderView" minOccurs="0" maxOccurs="1">
-            <xs:complexType>
-              <!-- ///// Attributes: RenderView ///// -->
-              <xs:attribute name="view" type="xs:string" use="required" />
-            </xs:complexType>
-          </xs:element>
+        <xs:choice minOccurs="1" maxOccurs="1">
           <!-- ///// Element: RenderData ///// -->
           <xs:element name="RenderData" minOccurs="0" maxOccurs="1">
             <xs:complexType>
@@ -308,6 +317,31 @@
               <xs:attribute name="dataKey" type="xs:string" use="required" />
             </xs:complexType>
           </xs:element>
+          <xs:sequence>
+            <!-- ///// Element: RenderView ///// -->
+            <xs:element name="RenderView" minOccurs="0" maxOccurs="1">
+              <xs:complexType>
+                <!-- ///// Attributes: RenderView ///// -->
+                <xs:attribute name="view" type="xs:string" use="required" />
+              </xs:complexType>
+            </xs:element>
+            <!-- ///// Element: OutputTranslation ///// -->
+            <xs:element name="OutputTranslation" minOccurs="0" maxOccurs="1">
+              <xs:complexType>
+                <!-- ///// Attributes: OutputTranslation ///// -->
+                <xs:attribute name="type" use="required">
+                  <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                      <xs:enumeration value="Handlr.Framework.Routing.Translators.JsonWriter" />
+                      <xs:enumeration value="Handlr.Framework.Routing.Translators.TextWriter" />
+                      <xs:enumeration value="Handlr.Framework.Routing.Translators.XmlWriter" />
+                    </xs:restriction>
+                  </xs:simpleType>
+                </xs:attribute>
+                <xs:attribute name="path" type="xs:string" use="required" />
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
         </xs:choice>
       </xs:sequence>
       <!-- ///// Attributes: Definition ///// -->

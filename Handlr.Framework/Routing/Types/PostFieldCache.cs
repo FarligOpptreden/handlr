@@ -92,6 +92,15 @@ namespace Handlr.Framework.Routing.Types
         }
 
         /// <summary>
+        /// Returns a list of all keys in the dictionary.
+        /// </summary>
+        /// <returns>IEnumerable of type string</returns>
+        public IEnumerable<string> GetKeys()
+        {
+            return Keys as IEnumerable<string>;
+        }
+
+        /// <summary>
         /// Gets the specified field's value.
         /// </summary>
         /// <typeparam name="T">The type of field to return</typeparam>

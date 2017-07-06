@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Handlr.Framework.UI.Types
 {
-    public class ViewModelResponse<T>
+    public class ViewModelResponse<T> : ResponseBase
     {
         private Handler _ControllerContext;
         private string _PageIdentifier;
@@ -13,6 +13,7 @@ namespace Handlr.Framework.UI.Types
         private List<string> _ScriptIncludes;
         private string[] _ExternalCssIncludes;
         private List<string> _CssIncludes;
+        private Dictionary<string, object> _Properties;
 
         private void ctor(Handler controllerContext, string pageIdentifier, string view)
         {
@@ -29,6 +30,7 @@ namespace Handlr.Framework.UI.Types
             _CssIncludes = _ControllerContext.ViewModel.View.CssIncludes;
             _ExternalCssIncludes = new string[_ControllerContext.ViewModel.View.ExternalCssIncludes.Count];
             _ControllerContext.ViewModel.View.ExternalCssIncludes.CopyTo(_ExternalCssIncludes);
+            _Properties = _ControllerContext.ViewModel.GetProperties();
         }
 
         public ViewModelResponse(Handler controllerContext, string pageIdentifier, string view, T model)
@@ -98,6 +100,15 @@ namespace Handlr.Framework.UI.Types
                 if (_ExternalCssIncludes == null || _ExternalCssIncludes.Count() == 0)
                     return null;
                 return _ExternalCssIncludes.ToList();
+            }
+        }
+
+        [JsonIgnore]
+        public Dictionary<string, object> Properties
+        {
+            get
+            {
+                return _Properties;
             }
         }
 

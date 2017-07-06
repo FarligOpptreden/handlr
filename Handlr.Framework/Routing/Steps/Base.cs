@@ -233,7 +233,7 @@ namespace Handlr.Framework.Routing.Steps
             const string paramRegex = "(" + fieldRegex + "|" + numberRegex + "|" + booleanRegex + "|" + stringRegex + ")"; // TODO: Fix param regex
 
             var oneParamMatch = Regex.Match(value, "(Exists)\\(" + paramRegex + "\\)", RegexOptions.IgnoreCase);
-            var twoParamMatch = Regex.Match(value, "(Equals|GreaterThan|LowerThan)\\(" + paramRegex + ",\\s?" + paramRegex + "\\)", RegexOptions.IgnoreCase);
+            var twoParamMatch = Regex.Match(value, "(NotEquals|Equals|GreaterThan|LowerThan)\\(" + paramRegex + ",\\s?" + paramRegex + "\\)", RegexOptions.IgnoreCase);
             if ((oneParamMatch == null || !oneParamMatch.Success) && (twoParamMatch == null || !twoParamMatch.Success))
             {
                 parsedValue = value;
@@ -262,17 +262,8 @@ namespace Handlr.Framework.Routing.Steps
                     if (Regex.IsMatch(match.Value, fieldRegex, RegexOptions.IgnoreCase))
                     {
                         string name = match.Groups[2].Value;
-                        if (FieldCache.Exists(name))
-                        {
-                            var fieldValue = FieldCache.GetValue<object>(name);
-                            if (fieldValue.IsPrimitive())
-                                fieldValue = fieldValue.ToString().ToLower();
-                            else
-                                fieldValue = fieldValue.ToJson();
-                            values.Add(fieldValue as string);
-                        }
-                        else
-                            values.Add("null");
+                        var member = Utilities.GetDataMember(name.Split('.').Where(p => p != "Fields").ToArray(), FieldCache);
+                        values.Add(member == null ? "null" : member.ToString().ToLower());
                         continue;
                     }
                     if (Regex.IsMatch(match.Value, stringRegex, RegexOptions.IgnoreCase))
@@ -284,6 +275,9 @@ namespace Handlr.Framework.Routing.Steps
                 }
                 switch (operation.ToUpper())
                 {
+                    case "NOTEQUALS":
+                        parsedValue = value.Replace(twoParamMatch.Value, (values[0] != values[1]).ToString().ToLower());
+                        break;
                     case "EQUALS":
                         parsedValue = value.Replace(twoParamMatch.Value, (values[0] == values[1]).ToString().ToLower());
                         break;

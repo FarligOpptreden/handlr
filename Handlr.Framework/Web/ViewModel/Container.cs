@@ -68,5 +68,10 @@ namespace Handlr.Framework.Web.ViewModel
                 return default(T);
             return (T)_Properties[key];
         }
+
+        public Dictionary<string, object> GetProperties()
+        {
+            return _Properties;
+        }
     }
 }

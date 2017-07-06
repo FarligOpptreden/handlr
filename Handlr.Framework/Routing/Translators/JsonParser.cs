@@ -61,21 +61,24 @@ namespace Handlr.Framework.Routing.Translators
             string template = match.Groups[3].Value;
             string parsedTemplate = _ListPre;
 
-            if (!typeof(IEnumerable).IsAssignableFrom(dataMember.GetType()))
-                throw new ParserException(string.Format("The data member being accessed for the foreach({0} in {1} do [template]) expression is not a valid list.", elementName, dataName));
-
-            foreach (var element in dataMember as IEnumerable)
+            if (dataMember != null)
             {
-                string elementTemplate = template;
-                if (element is Dictionary<string, object>)
-                    while (TryParseForLoop(elementTemplate, dataMember as IFieldCache, out elementTemplate)) { }
-                foreach (Match fieldMatch in Regex.Matches(elementTemplate, elementName + "(\\.[a-zA-Z0-9\\-_]+)*", RegexOptions.IgnoreCase))
+                if (!typeof(IEnumerable).IsAssignableFrom(dataMember.GetType()))
+                    throw new ParserException(string.Format("The data member being accessed for the foreach({0} in {1} do [template]) expression is not a valid list.", elementName, dataName));
+
+                foreach (var element in dataMember as IEnumerable)
                 {
-                    object elementMember = Utilities.GetDataMember(fieldMatch.Value.Split('.'), element);
-                    string replaceMatch = fieldMatch.Value.Replace(".", "\\.") + _FieldTermination;
-                    elementTemplate = Regex.Replace(elementTemplate, replaceMatch, elementMember.ToJson(), RegexOptions.IgnoreCase);
+                    string elementTemplate = template;
+                    if (element is Dictionary<string, object>)
+                        while (TryParseForLoop(elementTemplate, dataMember as IFieldCache, out elementTemplate)) { }
+                    foreach (Match fieldMatch in Regex.Matches(elementTemplate, elementName + "(\\.[a-zA-Z0-9\\-_]+)*", RegexOptions.IgnoreCase))
+                    {
+                        object elementMember = Utilities.GetDataMember(fieldMatch.Value.Split('.'), element);
+                        string replaceMatch = fieldMatch.Value.Replace(".", "\\.") + _FieldTermination;
+                        elementTemplate = Regex.Replace(elementTemplate, replaceMatch, elementMember.ToJson(), RegexOptions.IgnoreCase);
+                    }
+                    parsedTemplate += elementTemplate + _Concat;
                 }
-                parsedTemplate += elementTemplate + _Concat;
             }
 
             if (parsedTemplate.Length > 1)

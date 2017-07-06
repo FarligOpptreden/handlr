@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Handlr.Framework.UI.Types
 {
-    public class InfoResponse<T>
+    public class InfoResponse<T> : ResponseBase
     {
         public InfoResponse(T data, string message, bool success)
         {

@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 
 namespace Handlr.Framework.Routing.Interfaces
 {
@@ -10,5 +11,7 @@ namespace Handlr.Framework.Routing.Interfaces
         bool Exists(string key);
 
         T GetValue<T>(string key);
+
+        IEnumerable<string> GetKeys();
     }
 }

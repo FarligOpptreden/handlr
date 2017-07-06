@@ -162,6 +162,7 @@
     <Compile Include="Routing\Types\ClrParameter.cs" />
     <Compile Include="Routing\Types\DatabaseParameter.cs" />
     <Compile Include="Routing\Types\DataTableCache.cs" />
+    <Compile Include="Routing\Types\Factory.cs" />
     <Compile Include="Routing\Types\GenericFieldCache.cs" />
     <Compile Include="Routing\Types\JsonFieldCache.cs" />
     <Compile Include="Routing\Types\PostFieldCache.cs" />
@@ -177,6 +178,7 @@
     <Compile Include="UI\Types\Application.cs" />
     <Compile Include="UI\Types\InfoResponse.cs" />
     <Compile Include="UI\Types\MenuItem.cs" />
+    <Compile Include="UI\Types\ResponseBase.cs" />
     <Compile Include="UI\Types\SecureResponse.cs" />
     <Compile Include="UI\Types\ViewModelResponse.cs" />
     <Compile Include="UI\Views.cs" />

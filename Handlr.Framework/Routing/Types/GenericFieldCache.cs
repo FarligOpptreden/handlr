@@ -95,5 +95,14 @@ namespace Handlr.Framework.Routing.Types
         {
             return (T)this[name];
         }
+
+        /// <summary>
+        /// Returns a list of all keys in the dictionary.
+        /// </summary>
+        /// <returns>IEnumerable of type string</returns>
+        public IEnumerable<string> GetKeys()
+        {
+            return Keys as IEnumerable<string>;
+        }
     }
 }

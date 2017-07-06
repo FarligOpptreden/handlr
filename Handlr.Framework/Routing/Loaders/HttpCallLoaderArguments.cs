@@ -45,6 +45,21 @@ namespace Handlr.Framework.Routing.Loaders
         public ITranslation OutputTranslation { get; private set; }
 
         /// <summary>
+        /// Gets or sets the attribute value of the Cache property.
+        /// </summary>
+        public string CacheKey { get; private set; }
+
+        /// <summary>
+        /// Gets or set the attribute value of the Cache property.
+        /// </summary>
+        public string CacheType { get; private set; }
+
+        /// <summary>
+        /// Gets the amount of time, in milliseconds, after which the call will time-out.
+        /// </summary>
+        public int CommandTimeout { get; private set; }
+
+        /// <summary>
         /// Creates a new HttpRouteLoaderArguments instance.
         /// </summary>
         /// <param name="absolutePath">The absolute path of the module</param>
@@ -63,16 +78,26 @@ namespace Handlr.Framework.Routing.Loaders
             if (headers != null && headers.Elements() != null)
             {
                 var results = from parameter in headers.Elements()
+                              where parameter.HasAttributes
                               select new
                               {
-                                  Key = parameter.Name,
-                                  Value = parameter.Value
+                                  Key = parameter.Attribute("name").Value,
+                                  Value = parameter.Attribute("value").Value
                               };
                 // TODO: Map headers against LINQ result and check for data types
             }
-            var outputTranslationElement = configuration.XPathSelectElement("./OutputTranslation");
+            var outputTranslationElement = configuration.XPathSelectElement("./Output/Translate");
             if (outputTranslationElement != null)
                 OutputTranslation = Translators.Factory.Build(absolutePath, relativePath, outputTranslationElement);
+            var cacheTranslationElement = configuration.XPathSelectElement("./Output/Cache");
+            if (cacheTranslationElement != null)
+            {
+                CacheKey = cacheTranslationElement.Attribute("key").Value;
+                CacheType = cacheTranslationElement.Attribute("type").Value;
+            }
+            var timeoutElement = configuration.XPathSelectElement("./Timeout");
+            if (timeoutElement != null)
+                CommandTimeout = int.Parse(timeoutElement.Value);
         }
     }
 }

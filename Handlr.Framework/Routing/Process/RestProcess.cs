@@ -8,6 +8,8 @@ using Handlr.Framework.Routing.Types;
 using Handlr.Framework.Web.Interfaces;
 using Handlr.Framework.Routing.Exceptions;
 using System.Xml.XPath;
+using Handlr.Framework.UI.Types;
+using Handlr.Framework.Web;
 
 namespace Handlr.Framework.Routing.Process
 {
@@ -17,6 +19,7 @@ namespace Handlr.Framework.Routing.Process
     [Tag("Definition")]
     public class RestProcess : IProcess<GenericFieldCache, RestProcessLoaderArguments, RestInput, RestOutput>
     {
+        private IController _ExecutionContext;
         /// <summary>
         /// Gets all the steps to execute during the process.
         /// </summary>
@@ -48,6 +51,11 @@ namespace Handlr.Framework.Routing.Process
         public string OutputData { get; private set; }
 
         /// <summary>
+        /// Gets the resulting data from the process.
+        /// </summary>
+        public ResponseBase Output { get; private set; }
+
+        /// <summary>
         /// Initializes the process with the specified loader arguments.
         /// </summary>
         /// <param name="executionContext">The current execution context of the process</param>
@@ -58,13 +66,14 @@ namespace Handlr.Framework.Routing.Process
             if (loaderArgs == null)
                 throw new ArgumentNullException("loaderArgs");
 
+            _ExecutionContext = executionContext;
             LoaderArguments = loaderArgs;
             // Load the steps defined in the definition
             var stepElements = from step in LoaderArguments.Configuration.Elements()
                                where step.Name != "InputTranslation" && step.Name != "OutputTranslation" && step.Name != "RenderView" && step.Name != "RenderData"
                                select step;
             foreach (var step in stepElements)
-                Steps.Add(Routing.Steps.Factory.Build(LoaderArguments.AbsolutePath, LoaderArguments.RelativePath, step, executionContext));
+                Steps.Add(Routing.Steps.Factory.Build(LoaderArguments.AbsolutePath, LoaderArguments.RelativePath, step, _ExecutionContext));
 
             var inputTranslationElement = LoaderArguments.Configuration.XPathSelectElement("./InputTranslation");
             if (inputTranslationElement != null)
@@ -131,11 +140,24 @@ namespace Handlr.Framework.Routing.Process
                         break;
                     }
 
+            if (!string.IsNullOrEmpty(OutputView))
+            {
+                output.SetData(fieldCache, fieldCache);
+                Output = new ViewModelResponse<object>((Handler)_ExecutionContext, LoaderArguments.FactoryArgs.ModuleName, OutputView, output);
+                var properties = ((ViewModelResponse<object>)Output).Properties;
+                if (properties != null && properties.Count > 0)
+                    fieldCache.AddRange(properties);
+            }
             if (output.Success)
             {
                 var translatedCache = OutputTranslation != null ? OutputTranslation.Translate(fieldCache) : fieldCache;
                 output.SetData((!string.IsNullOrEmpty(OutputData) ? translatedCache[OutputData] : translatedCache), fieldCache);
             }
+            if (string.IsNullOrEmpty(OutputView))
+                Output = new InfoResponse<object>(
+                    output.Success ? output.Data : output.Errors,
+                    output.Success ? null : "One or more errors occurred during the execution of the controller. Please interrogate the Data property for further information.",
+                    output.Success);
             return output;
         }
     }

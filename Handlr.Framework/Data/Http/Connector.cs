@@ -38,16 +38,16 @@ namespace Handlr.Framework.Data.Http
             Connection.AcceptType = contentType;
         }
 
-        public string Call(object body, Dictionary<string, object> parameters = null, Dictionary<string, string> headers = null)
+        public string Call(object body, Dictionary<string, object> parameters = null, Dictionary<string, string> headers = null, int commandTimeout = 0)
         {
-            Command command = Prepare(null, parameters, body, headers);
+            Command command = Prepare(null, parameters, body, headers, commandTimeout);
             return command.Execute(BubbleExceptions);
         }
 
-        public IEnumerable<T> Call<T>(object body, Dictionary<string, object> parameters = null, Dictionary<string, string> headers = null)
+        public IEnumerable<T> Call<T>(object body, Dictionary<string, object> parameters = null, Dictionary<string, string> headers = null, int commandTimeout = 0)
             where T : new()
         {
-            string result = Call(body, parameters, headers);
+            string result = Call(body, parameters, headers, commandTimeout);
             if (!string.IsNullOrEmpty(result))
             {
                 T obj = result.To<T>();
@@ -61,13 +61,13 @@ namespace Handlr.Framework.Data.Http
 
         public void ExecuteWriter(string query, Dictionary<string, object> inputParameters, Dictionary<string, object> outputParameters = null, int commandTimeout = 0)
         {
-            Command command = Prepare(query, inputParameters);
+            Command command = Prepare(query, inputParameters, commandTimeout);
             command.Execute(BubbleExceptions);
         }
 
         public string ExecuteReader(string query, Dictionary<string, object> inputParameters, Dictionary<string, object> outputParameters = null, bool alwaysReturnData = false, int commandTimeout = 0)
         {
-            Command command = Prepare(query, inputParameters);
+            Command command = Prepare(query, inputParameters, commandTimeout);
             return command.Execute(BubbleExceptions);
         }
 
@@ -94,12 +94,12 @@ namespace Handlr.Framework.Data.Http
             return default(T);
         }
 
-        protected virtual Command Prepare(string query, Dictionary<string, object> parameters)
+        protected virtual Command Prepare(string query, Dictionary<string, object> parameters, int commandTimeout = 0)
         {
-            return Prepare(query, parameters, null);
+            return Prepare(query, parameters, null, null, commandTimeout);
         }
 
-        protected virtual Command Prepare(string query, Dictionary<string, object> parameters, object body, Dictionary<string, string> headers = null)
+        protected virtual Command Prepare(string query, Dictionary<string, object> parameters, object body, Dictionary<string, string> headers = null, int commandTimeout = 0)
         {
             if (Connection == null)
                 throw new Exception("Database connector hasn't been initialized yet. Call .Initialize() first.");
@@ -108,6 +108,8 @@ namespace Handlr.Framework.Data.Http
                 CommandText = query,
                 Connection = Connection
             };
+            if (commandTimeout > 0)
+                command.CommandTimeout = commandTimeout;
             if (parameters != null)
             {
                 foreach (KeyValuePair<string, object> kvp in parameters)

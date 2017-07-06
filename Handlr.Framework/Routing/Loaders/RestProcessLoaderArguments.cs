@@ -1,4 +1,5 @@
-﻿using System.Xml.Linq;
+﻿using Handlr.Framework.Routing.Process;
+using System.Xml.Linq;
 
 namespace Handlr.Framework.Routing.Loaders
 {
@@ -28,6 +29,11 @@ namespace Handlr.Framework.Routing.Loaders
         /// "Accept" header.
         /// </summary>
         public string Produces { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the arguments supplied when initiating the process factory.
+        /// </summary>
+        public RestProcessFactoryArguments FactoryArgs { get; set; }
 
         /// <summary>
         /// Creates a new RestProcessLoaderArguments instance.

@@ -16,7 +16,7 @@ namespace Handlr.Framework.Data.Soap
             Connection = new Connection(ConnectionString);
         }
 
-        protected override Http.Command Prepare(string query, Dictionary<string, object> parameters)
+        protected override Http.Command Prepare(string query, Dictionary<string, object> parameters, int commandTimeout = 0)
         {
             /*
             base.Prepare<C, P>(query, parameters);

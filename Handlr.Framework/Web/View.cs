@@ -38,5 +38,10 @@ namespace Handlr.Framework.Web
         {
             return Model.GetProperty<P>(key);
         }
+
+        public void SetProperty<P>(string key, P value)
+        {
+            Model.SetProperty(key, value);
+        }
     }
 }

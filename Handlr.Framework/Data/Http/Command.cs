@@ -14,7 +14,7 @@ namespace Handlr.Framework.Data.Http
 
         public override string CommandText { get; set; }
 
-        public override int CommandTimeout { get; set; }
+        public override int CommandTimeout { get; set; } = 30000;
 
         public override System.Data.CommandType CommandType { get; set; }
 
@@ -94,6 +94,7 @@ namespace Handlr.Framework.Data.Http
             try
             {
                 Connection.Open();
+                ((Connection)Connection).Request.Timeout = CommandTimeout;
                 result = ((Connection)Connection).Read();
                 Connection.Close();
             }
@@ -149,6 +150,7 @@ namespace Handlr.Framework.Data.Http
             }
             if (new Method[] { Method.Post, Method.Put }.Contains((Connection as Connection).Method))
             {
+                ((Connection)Connection).Headers.Add("Content-Length", "0");
                 if (RequestBody != null)
                 {
                     string body = "";
@@ -176,7 +178,7 @@ namespace Handlr.Framework.Data.Http
                     {
                         body = RequestBody.ToString();
                     }
-                    ((Connection)Connection).Headers.Add("Content-Length", body.Length.ToString());
+                    ((Connection)Connection).Headers["Content-Length"] = body.Length.ToString();
                     ((Connection)Connection).Write(body);
                     return;
                 }
@@ -192,7 +194,7 @@ namespace Handlr.Framework.Data.Http
                 }
                 postBody = postBody.Substring(0, postBody.Length - 1);
                 postBody += ((Connection)Connection).ContentType.Contains("json") ? "}" : "";
-                ((Connection)Connection).Headers.Add("Content-Length", postBody.Length.ToString());
+                ((Connection)Connection).Headers["Content-Length"] = postBody.Length.ToString();
                 ((Connection)Connection).Write(postBody);
             }
         }

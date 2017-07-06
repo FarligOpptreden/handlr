@@ -1,0 +1,2 @@
+xcopy /Q /Y "$(TargetPath)" "C:\Work\{type}DEV\Repository"
+if "$(ConfigurationName)" == "Release" "C:\Work\{type}DEV\nuget.exe" pack "$(ProjectPath)" -Prop Configuration=Release

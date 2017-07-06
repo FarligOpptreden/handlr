@@ -44,7 +44,8 @@ namespace Handlr.Framework.Routing.Exceptions
             {
                 if (!string.IsNullOrEmpty(_Message))
                     return _Message;
-                return string.Format("Field \"{0}\" with value \"{1}\" did not validate successfully against the pattern \"{2}\": {3}", Field, Value.ToString(), ValidationPattern, ValidationMessage);
+                return ValidationMessage;
+                //return string.Format("Field \"{0}\" with value \"{1}\" did not validate successfully against the pattern \"{2}\": {3}", Field, Value.ToString(), ValidationPattern, ValidationMessage);
             }
         }
 
