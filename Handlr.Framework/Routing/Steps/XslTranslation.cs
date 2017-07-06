@@ -1,7 +1,8 @@
 ﻿using Handlr.Framework.Routing.Attributes;
-using System;
 using Handlr.Framework.Routing.Interfaces;
 using Handlr.Framework.Web.Interfaces;
+using Handlr.Framework.Routing.Types;
+using System;
 
 namespace Handlr.Framework.Routing.Steps
 {
@@ -29,7 +30,24 @@ namespace Handlr.Framework.Routing.Steps
             if (fieldCache == null)
                 throw new ArgumentNullException("fieldCache");
 
-            var result = new Translators.XslTranslator().Translate(fieldCache);
+            IFieldCache toTranslateCache;
+
+            if (!string.IsNullOrEmpty(LoaderArguments.TemplateInputKey))
+                toTranslateCache = new XmlFieldCache(LoaderArguments.TemplateInputKey, fieldCache[LoaderArguments.TemplateInputKey].ToString());
+            else
+                toTranslateCache = fieldCache;
+
+            var translatorInstance = new Translators.XslTranslator();
+            var loaderInstance = new Loaders.TranslateLoaderArguments(LoaderArguments.AbsolutePath, LoaderArguments.RelativePath, LoaderArguments.Configuration);
+
+            translatorInstance.Load(loaderInstance);
+
+            var translatedCache = translatorInstance.Translate(toTranslateCache);
+
+            if (!string.IsNullOrEmpty(LoaderArguments.TemplateOutputKey))
+                fieldCache.Add(LoaderArguments.TemplateOutputKey, translatedCache[LoaderArguments.TemplateOutputKey]);
+            else
+                fieldCache.AddRange(translatedCache);
             return fieldCache;
         }
     }
